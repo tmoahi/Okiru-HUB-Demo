@@ -1,0 +1,19 @@
+{
+  "name": "Okiru HUB",
+  "short_name": "Okiru",
+  "description": "Okiru unified operations workspace — CRM, Analytics & Marketing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06090f",
+  "theme_color": "#06CDE1",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/okiru-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"]
+}

@@ -12,8 +12,11 @@ export default function Sidebar({ activeView, setActiveView, views }) {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <span className="logo-icon">◈</span>
-        <span className="logo-text">Okiru<strong>HUB</strong></span>
+        <img src="/okiru-logo.svg" alt="Okiru" className="sidebar-logo-img" />
+        <div className="sidebar-logo-text">
+          <span className="sidebar-logo-name">Okiru HUB</span>
+          <span className="sidebar-logo-sub">Workspace</span>
+        </div>
       </div>
 
       <nav className="sidebar-nav">
