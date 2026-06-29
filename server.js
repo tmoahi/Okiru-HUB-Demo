@@ -83,12 +83,66 @@ const analyticsData = {
     { page: '/contact',               views:  3_240, avgTime: '2m 45s', bounceRate: '16%' },
   ],
   conversions: {
-    total:          1_554,
-    consultationRequests: 640,
-    trainingSignups:      480,
-    reportDownloads:      310,
-    demoRequests:         124,
+    total:                1_554,
+    consultationRequests:   640,
+    trainingSignups:        480,
+    reportDownloads:        310,
+    demoRequests:           124,
   },
+
+  // ── Social Media ──────────────────────────────────────────────────────────
+  socialMedia: {
+    summary: {
+      totalFollowers:      12_480,
+      followerGrowth:        '+500',
+      totalImpressions:    82_320,
+      avgEngagementRate:   '4.8%',
+      totalClicks:          3_240,
+      totalPosts:              62,
+    },
+    platforms: [
+      { platform: 'LinkedIn',  icon: 'in', color: '#0A66C2', followers: 8_420, growth: '+340', impressions: 52_400, engagementRate: '5.2%', clicks: 2_180, posts: 18 },
+      { platform: 'Facebook',  icon: 'f',  color: '#1877F2', followers: 2_340, growth: '+82',  impressions: 18_600, engagementRate: '3.8%', clicks:   620, posts: 12 },
+      { platform: 'Instagram', icon: 'ig', color: '#E1306C', followers: 1_420, growth: '+64',  impressions: 11_240, engagementRate: '5.6%', clicks:   380, posts: 24 },
+      { platform: 'Twitter/X', icon: 'X',  color: '#14171A', followers:   300, growth: '+14',  impressions:  2_080, engagementRate: '2.1%', clicks:    60, posts:  8 },
+    ],
+    monthlyImpressions: [
+      { month: 'Feb', linkedin: 38_200, facebook: 12_400, instagram:  7_800 },
+      { month: 'Mar', linkedin: 42_600, facebook: 14_200, instagram:  8_600 },
+      { month: 'Apr', linkedin: 46_800, facebook: 15_800, instagram:  9_400 },
+      { month: 'May', linkedin: 50_400, facebook: 17_200, instagram: 10_200 },
+      { month: 'Jun', linkedin: 52_400, facebook: 18_600, instagram: 11_240 },
+    ],
+    topPosts: [
+      { platform: 'LinkedIn',  content: 'Understanding the new B-BBEE Codes of Good Practice 2025',       impressions: 8_420, engagementRate: '6.8%', clicks: 412, date: '2025-06-12' },
+      { platform: 'LinkedIn',  content: 'How AI is transforming ESG reporting in South Africa',            impressions: 6_840, engagementRate: '5.9%', clicks: 328, date: '2025-06-18' },
+      { platform: 'LinkedIn',  content: '5 steps to improve your B-BBEE scorecard before year-end',        impressions: 5_620, engagementRate: '5.4%', clicks: 284, date: '2025-06-24' },
+      { platform: 'Instagram', content: 'Behind the scenes: ESG Masterclass Johannesburg',                 impressions: 4_220, engagementRate: '7.2%', clicks: 184, date: '2025-06-20' },
+      { platform: 'Facebook',  content: 'Transformation Index 2025 Report — Download Now',                 impressions: 3_840, engagementRate: '4.4%', clicks: 210, date: '2025-06-08' },
+    ],
+  },
+
+  // ── Lead Tracker ──────────────────────────────────────────────────────────
+  leads: [
+    { id:  1, name: 'Sipho Dlamini',     company: 'Rand Merchant Holdings', service: 'B-BBEE Verification',    source: 'LinkedIn',     campaign: 'B-BBEE Scorecard 2025',       status: 'Converted', date: '2025-06-02' },
+    { id:  2, name: 'Lerato Mokoena',    company: 'Ecowise Construction',   service: 'ESG Strategy',           source: 'Organic',      campaign: 'Transformation Index Report', status: 'Qualified', date: '2025-06-05' },
+    { id:  3, name: 'Andile Khumalo',    company: 'Thrive Financial Group', service: 'AI Transformation',      source: 'LinkedIn',     campaign: 'AI in the Boardroom Webinar', status: 'Converted', date: '2025-06-07' },
+    { id:  4, name: 'Nomsa Vilakazi',    company: 'Sanlam SME Division',    service: 'Compliance Training',    source: 'Email',        campaign: 'Compliance Toolkit Launch',   status: 'Contacted', date: '2025-06-09' },
+    { id:  5, name: 'Kagiso Sithole',    company: 'GreenBuild Africa',      service: 'ESG Assessment',         source: 'Referral',     campaign: 'Partner Network',             status: 'Qualified', date: '2025-06-11' },
+    { id:  6, name: 'Tebogo Nkosi',      company: 'Ukhamba Mining Corp',    service: 'B-BBEE Advisory',        source: 'LinkedIn',     campaign: 'B-BBEE Scorecard 2025',       status: 'Converted', date: '2025-06-12' },
+    { id:  7, name: 'Ayanda Zulu',       company: 'Luminary Retail Group',  service: 'Enterprise Development', source: 'LinkedIn',     campaign: 'B-BBEE Scorecard 2025',       status: 'Contacted', date: '2025-06-14' },
+    { id:  8, name: 'Phindi Mthembu',    company: 'Afrinest Capital',       service: 'ESG Reporting',          source: 'Organic',      campaign: 'SEO / Direct',                status: 'New',       date: '2025-06-16' },
+    { id:  9, name: 'Bongani Shabalala', company: 'Construct SA',           service: 'Compliance Training',    source: 'Email',        campaign: 'ESG Reporting Masterclass',   status: 'Qualified', date: '2025-06-17' },
+    { id: 10, name: 'Zanele Kgomo',      company: 'Highveld Energy',        service: 'AI Transformation',      source: 'LinkedIn',     campaign: 'AI in the Boardroom Webinar', status: 'New',       date: '2025-06-19' },
+    { id: 11, name: 'Sifiso Mahlangu',   company: 'Nkosi Logistics',        service: 'B-BBEE Verification',    source: 'Referral',     campaign: 'Partner Network',             status: 'Converted', date: '2025-06-20' },
+    { id: 12, name: 'Dikeledi Moruane',  company: 'Savanna Health Group',   service: 'ESG Strategy',           source: 'Organic',      campaign: 'SEO / Direct',                status: 'Contacted', date: '2025-06-22' },
+    { id: 13, name: 'Lebo Radebe',       company: 'Botho Technologies',     service: 'AI Transformation',      source: 'LinkedIn',     campaign: 'AI in the Boardroom Webinar', status: 'Qualified', date: '2025-06-23' },
+    { id: 14, name: 'Mpho Sithole',      company: 'Mzansi Builders',        service: 'B-BBEE Advisory',        source: 'Social Media', campaign: 'BBBEE Awareness Social Ads',  status: 'New',       date: '2025-06-24' },
+    { id: 15, name: 'Refilwe Moagi',     company: 'Tshepo Financial',       service: 'Compliance Training',    source: 'Direct',       campaign: 'Direct / Website',            status: 'Contacted', date: '2025-06-25' },
+    { id: 16, name: 'Vusi Mahlangu',     company: 'Pan African Mining',     service: 'B-BBEE Verification',    source: 'LinkedIn',     campaign: 'B-BBEE Scorecard 2025',       status: 'Qualified', date: '2025-06-26' },
+    { id: 17, name: 'Ntombi Dube',       company: 'Seriti Healthcare',      service: 'ESG Reporting',          source: 'Email',        campaign: 'ESG Reporting Masterclass',   status: 'New',       date: '2025-06-27' },
+    { id: 18, name: 'Kgosi Sekgobela',   company: 'Ubuntu Retail',          service: 'Enterprise Development', source: 'Referral',     campaign: 'Partner Network',             status: 'New',       date: '2025-06-28' },
+  ],
 };
 
 const marketingData = {
@@ -151,9 +205,11 @@ app.get('/api/dashboard', (req, res) => {
   });
 });
 
-app.get('/api/crm',       (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: crmData       }));
-app.get('/api/analytics', (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: analyticsData }));
-app.get('/api/marketing', (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: marketingData }));
+app.get('/api/crm',            (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: crmData                     }));
+app.get('/api/analytics',      (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: analyticsData              }));
+app.get('/api/social-media',   (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: analyticsData.socialMedia  }));
+app.get('/api/leads',          (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: analyticsData.leads        }));
+app.get('/api/marketing',      (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: marketingData              }));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
