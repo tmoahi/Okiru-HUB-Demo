@@ -8,14 +8,15 @@ import LoadingSpinner from './LoadingSpinner';
 import './MarketingDashboard.css';
 
 function fmt(n) {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}k`;
-  return `$${n}`;
+  if (n >= 1_000_000) return `R${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)     return `R${(n / 1_000).toFixed(0)}k`;
+  return `R${n}`;
 }
 
 const CHANNEL_COLORS = {
   'Email':        'var(--accent-blue)',
   'Social Media': 'var(--accent-violet)',
+  'LinkedIn':     'var(--accent-teal)',
   'Paid Search':  'var(--accent-amber)',
   'Organic':      'var(--accent-emerald)',
   'Referral':     'var(--accent-rose)',
@@ -51,16 +52,16 @@ export default function MarketingDashboard() {
         <StatCard label="Total Spend"       value={fmt(data.summary.totalSpend)}    accent="rose"    icon="💸" />
         <StatCard label="Total Revenue"     value={fmt(data.summary.totalRevenue)}  accent="emerald" icon="💰" sub={`ROI: ${data.summary.overallROI}`} />
         <StatCard label="Leads Generated"   value={data.summary.leadsGenerated.toLocaleString()} accent="blue" icon="🎯" />
-        <StatCard label="Cost Per Lead"     value={`$${data.summary.costPerLead}`}  accent="amber"   icon="📊" sub={`${data.summary.activeCampaigns} active campaigns`} />
+        <StatCard label="Cost Per Lead"     value={`R${data.summary.costPerLead}`}  accent="amber"   icon="📊" sub={`${data.summary.activeCampaigns} active campaigns`} />
       </section>
 
       {/* Monthly charts */}
       <section className="marketing-charts">
-        <Card title="Monthly Spend" subtitle="Last 5 months ($)">
-          <BarChart data={spendChart} unit="$" height={160} />
+        <Card title="Monthly Spend" subtitle="Last 5 months (R)">
+          <BarChart data={spendChart} unit="R" height={160} />
         </Card>
-        <Card title="Monthly Revenue" subtitle="Last 5 months ($)">
-          <BarChart data={revenueChart} unit="$" height={160} />
+        <Card title="Monthly Revenue" subtitle="Last 5 months (R)">
+          <BarChart data={revenueChart} unit="R" height={160} />
         </Card>
         <Card title="Revenue by Channel" subtitle="All time">
           <DonutChart data={channelDonut} size={160} />
