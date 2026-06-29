@@ -1,9 +1,9 @@
 const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-const path = require('path');
+const cors    = require('cors');
+const morgan  = require('morgan');
+const path    = require('path');
 
-const app = express();
+const app  = express();
 const PORT = process.env.PORT || 3000;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
@@ -11,154 +11,150 @@ app.use(cors());
 app.use(morgan('combined'));
 app.use(express.json());
 
-// ─── Sample Data ──────────────────────────────────────────────────────────────
+// ─── Sample Data — Okiru Consulting (SA) ──────────────────────────────────────
+//     B-BBEE | ESG | AI Transformation | Compliance Training
+//     Currency: South African Rand (R)
 
 const crmData = {
   summary: {
-    totalDeals: 142,
-    openDeals: 38,
-    wonDeals: 89,
-    lostDeals: 15,
-    totalRevenue: 1_284_500,
-    avgDealSize: 14_432,
+    totalDeals:    96,
+    openDeals:     31,
+    wonDeals:      58,
+    lostDeals:      7,
+    totalRevenue:  4_820_000,
+    avgDealSize:   83_103,
   },
   pipeline: [
-    { stage: 'Prospecting',    deals: 12, value: 186_000 },
-    { stage: 'Qualification',  deals: 9,  value: 143_500 },
-    { stage: 'Proposal',       deals: 8,  value: 212_000 },
-    { stage: 'Negotiation',    deals: 5,  value: 98_000  },
-    { stage: 'Closed Won',     deals: 4,  value: 310_000 },
+    { stage: 'Discovery',      deals: 9,  value: 620_000   },
+    { stage: 'Scoping',        deals: 7,  value: 840_000   },
+    { stage: 'Proposal Sent',  deals: 8,  value: 1_260_000 },
+    { stage: 'Contract',       deals: 4,  value: 980_000   },
+    { stage: 'Delivery',       deals: 3,  value: 1_120_000 },
   ],
   recentDeals: [
-    { id: 1, company: 'Acme Corp',        contact: 'Jane Smith',    value: 45_000, stage: 'Negotiation', daysOpen: 12 },
-    { id: 2, company: 'Globex Inc',       contact: 'John Doe',      value: 28_500, stage: 'Proposal',    daysOpen: 7  },
-    { id: 3, company: 'Initech Solutions',contact: 'Alice Johnson', value: 62_000, stage: 'Closed Won',  daysOpen: 31 },
-    { id: 4, company: 'Umbrella Ltd',     contact: 'Bob Williams',  value: 19_200, stage: 'Qualification',daysOpen: 4 },
-    { id: 5, company: 'Stark Industries', contact: 'Carol Davis',   value: 87_500, stage: 'Prospecting', daysOpen: 2  },
+    { id: 1, company: 'Rand Merchant Holdings',  contact: 'Sipho Dlamini',    value: 320_000, stage: 'Contract',      daysOpen: 8,  service: 'B-BBEE Verification'       },
+    { id: 2, company: 'Ecowise Construction',    contact: 'Lerato Mokoena',   value: 185_000, stage: 'Proposal Sent', daysOpen: 14, service: 'ESG Strategy & Reporting'   },
+    { id: 3, company: 'Thrive Financial Group',  contact: 'Andile Khumalo',   value: 560_000, stage: 'Delivery',      daysOpen: 42, service: 'AI Transformation Roadmap'  },
+    { id: 4, company: 'Sanlam SME Division',     contact: 'Nomsa Vilakazi',   value: 98_000,  stage: 'Scoping',       daysOpen: 5,  service: 'Compliance Training Bundle' },
+    { id: 5, company: 'GreenBuild Africa',       contact: 'Kagiso Sithole',   value: 240_000, stage: 'Discovery',     daysOpen: 2,  service: 'ESG Baseline Assessment'   },
+    { id: 6, company: 'Ukhamba Mining Corp',     contact: 'Tebogo Nkosi',     value: 410_000, stage: 'Contract',      daysOpen: 19, service: 'B-BBEE Scorecard Advisory' },
+    { id: 7, company: 'Luminary Retail Group',   contact: 'Ayanda Zulu',      value: 145_000, stage: 'Proposal Sent', daysOpen: 11, service: 'Enterprise Development Plan'},
   ],
   topContacts: [
-    { name: 'Jane Smith',    company: 'Acme Corp',         deals: 4, totalValue: 142_000 },
-    { name: 'John Doe',      company: 'Globex Inc',        deals: 3, totalValue: 98_500  },
-    { name: 'Alice Johnson', company: 'Initech Solutions', deals: 5, totalValue: 215_000 },
+    { name: 'Andile Khumalo',   company: 'Thrive Financial Group', deals: 4, totalValue: 1_340_000, service: 'AI Transformation' },
+    { name: 'Sipho Dlamini',    company: 'Rand Merchant Holdings', deals: 3, totalValue:   880_000, service: 'B-BBEE Advisory'   },
+    { name: 'Nomsa Vilakazi',   company: 'Sanlam SME Division',    deals: 5, totalValue:   620_000, service: 'Training & Compliance' },
+    { name: 'Lerato Mokoena',   company: 'Ecowise Construction',   deals: 2, totalValue:   425_000, service: 'ESG Strategy'      },
   ],
 };
 
 const analyticsData = {
   summary: {
-    totalVisitors:   48_320,
-    uniqueVisitors:  31_540,
-    pageViews:      124_870,
-    avgSessionDuration: '3m 42s',
-    bounceRate:     '38.4%',
-    conversionRate: '4.2%',
+    totalVisitors:   22_840,
+    uniqueVisitors:  15_310,
+    pageViews:       64_220,
+    avgSessionDuration: '4m 18s',
+    bounceRate:      '34.2%',
+    conversionRate:  '6.8%',
   },
   trafficSources: [
-    { source: 'Organic Search', visitors: 18_240, percentage: 37.7 },
-    { source: 'Direct',         visitors: 11_430, percentage: 23.7 },
-    { source: 'Social Media',   visitors:  8_960, percentage: 18.5 },
-    { source: 'Email',          visitors:  5_820, percentage: 12.0 },
-    { source: 'Referral',       visitors:  3_870, percentage:  8.0 },
+    { source: 'LinkedIn',       visitors: 8_640,  percentage: 37.8 },
+    { source: 'Organic Search', visitors: 6_120,  percentage: 26.8 },
+    { source: 'Direct',         visitors: 3_980,  percentage: 17.4 },
+    { source: 'Email',          visitors: 2_540,  percentage: 11.1 },
+    { source: 'Referral',       visitors: 1_560,  percentage:  6.8 },
   ],
   weeklyVisitors: [
-    { day: 'Mon', visitors: 6_420 },
-    { day: 'Tue', visitors: 7_180 },
-    { day: 'Wed', visitors: 8_340 },
-    { day: 'Thu', visitors: 7_920 },
-    { day: 'Fri', visitors: 9_100 },
-    { day: 'Sat', visitors: 5_230 },
-    { day: 'Sun', visitors: 4_130 },
+    { day: 'Mon', visitors: 3_820 },
+    { day: 'Tue', visitors: 4_440 },
+    { day: 'Wed', visitors: 4_980 },
+    { day: 'Thu', visitors: 4_310 },
+    { day: 'Fri', visitors: 3_640 },
+    { day: 'Sat', visitors:   980 },
+    { day: 'Sun', visitors:   670 },
   ],
   topPages: [
-    { page: '/home',       views: 24_500, avgTime: '2m 10s', bounceRate: '32%' },
-    { page: '/products',   views: 18_320, avgTime: '4m 05s', bounceRate: '28%' },
-    { page: '/pricing',    views: 12_840, avgTime: '5m 22s', bounceRate: '22%' },
-    { page: '/about',      views:  8_760, avgTime: '1m 48s', bounceRate: '45%' },
-    { page: '/contact',    views:  6_430, avgTime: '3m 15s', bounceRate: '18%' },
+    { page: '/bbbee-services',        views: 14_800, avgTime: '5m 32s', bounceRate: '24%' },
+    { page: '/esg-training',          views: 11_420, avgTime: '4m 48s', bounceRate: '27%' },
+    { page: '/ai-transformation',     views:  9_640, avgTime: '6m 12s', bounceRate: '19%' },
+    { page: '/compliance-training',   views:  7_280, avgTime: '3m 55s', bounceRate: '31%' },
+    { page: '/enterprise-development',views:  5_840, avgTime: '4m 20s', bounceRate: '28%' },
+    { page: '/about',                 views:  4_920, avgTime: '2m 10s', bounceRate: '42%' },
+    { page: '/contact',               views:  3_240, avgTime: '2m 45s', bounceRate: '16%' },
   ],
   conversions: {
-    total: 2_030,
-    signups: 1_240,
-    purchases: 540,
-    demoRequests: 250,
+    total:          1_554,
+    consultationRequests: 640,
+    trainingSignups:      480,
+    reportDownloads:      310,
+    demoRequests:         124,
   },
 };
 
 const marketingData = {
   summary: {
-    activeCampaigns:   8,
-    totalSpend:   42_800,
-    totalRevenue: 198_400,
-    overallROI:   '363.6%',
-    leadsGenerated: 1_842,
-    costPerLead:   23.24,
+    activeCampaigns:    7,
+    totalSpend:    184_000,
+    totalRevenue: 1_420_000,
+    overallROI:    '671.7%',
+    leadsGenerated:    924,
+    costPerLead:    199.13,
   },
   campaigns: [
-    { id: 1, name: 'Q4 Product Launch',   channel: 'Email',        status: 'Active',   spend: 8_200, revenue: 42_000, roi: '412%', leads: 420 },
-    { id: 2, name: 'Brand Awareness',     channel: 'Social Media', status: 'Active',   spend: 6_500, revenue: 28_500, roi: '338%', leads: 310 },
-    { id: 3, name: 'Retargeting Push',    channel: 'Paid Search',  status: 'Active',   spend: 5_100, revenue: 31_200, roi: '512%', leads: 280 },
-    { id: 4, name: 'Newsletter Blast',    channel: 'Email',        status: 'Completed',spend: 1_200, revenue:  9_800, roi: '717%', leads: 195 },
-    { id: 5, name: 'Influencer Collab',   channel: 'Social Media', status: 'Active',   spend: 9_800, revenue: 38_400, roi: '292%', leads: 380 },
-    { id: 6, name: 'SEO Content Push',    channel: 'Organic',      status: 'Active',   spend: 4_200, revenue: 22_100, roi: '426%', leads: 257 },
+    { id: 1, name: 'B-BBEE Scorecard 2025',            channel: 'LinkedIn',    status: 'Active',    spend: 38_000,  revenue: 360_000, roi: '847%', leads: 198 },
+    { id: 2, name: 'ESG Reporting Masterclass',        channel: 'Email',       status: 'Active',    spend: 24_000,  revenue: 220_000, roi: '817%', leads: 164 },
+    { id: 3, name: 'AI in the Boardroom — Webinar',    channel: 'LinkedIn',    status: 'Active',    spend: 42_000,  revenue: 380_000, roi: '805%', leads: 218 },
+    { id: 4, name: 'Transformation Index 2025 Report', channel: 'Organic',     status: 'Active',    spend: 18_000,  revenue: 162_000, roi: '800%', leads: 142 },
+    { id: 5, name: 'Compliance Toolkit Launch',        channel: 'Email',       status: 'Active',    spend: 14_000,  revenue: 118_000, roi: '743%', leads: 96  },
+    { id: 6, name: 'Enterprise Dev Partner Drive',     channel: 'Referral',    status: 'Completed', spend: 28_000,  revenue: 124_000, roi: '343%', leads: 74  },
+    { id: 7, name: 'BBBEE Awareness — Social Ads',     channel: 'Social Media',status: 'Paused',    spend: 20_000,  revenue: 56_000,  roi: '180%', leads: 32  },
   ],
   channelPerformance: [
-    { channel: 'Email',        spend: 9_400,  revenue: 51_800, leads: 615 },
-    { channel: 'Social Media', spend: 16_300, revenue: 66_900, leads: 690 },
-    { channel: 'Paid Search',  spend: 5_100,  revenue: 31_200, leads: 280 },
-    { channel: 'Organic',      spend: 4_200,  revenue: 22_100, leads: 257 },
-    { channel: 'Referral',     spend: 7_800,  revenue: 26_400, leads: 0   },
+    { channel: 'LinkedIn',     spend: 80_000,  revenue: 740_000, leads: 416 },
+    { channel: 'Email',        spend: 38_000,  revenue: 338_000, leads: 260 },
+    { channel: 'Organic',      spend: 18_000,  revenue: 162_000, leads: 142 },
+    { channel: 'Referral',     spend: 28_000,  revenue: 124_000, leads: 74  },
+    { channel: 'Social Media', spend: 20_000,  revenue: 56_000,  leads: 32  },
   ],
   monthlySpend: [
-    { month: 'Jul', spend: 6_200, revenue: 28_400 },
-    { month: 'Aug', spend: 7_100, revenue: 33_200 },
-    { month: 'Sep', spend: 8_400, revenue: 41_800 },
-    { month: 'Oct', spend: 9_200, revenue: 48_600 },
-    { month: 'Nov', spend: 11_900,revenue: 46_400 },
+    { month: 'Feb', spend: 24_000,  revenue: 168_000 },
+    { month: 'Mar', spend: 28_000,  revenue: 210_000 },
+    { month: 'Apr', spend: 32_000,  revenue: 264_000 },
+    { month: 'May', spend: 38_000,  revenue: 320_000 },
+    { month: 'Jun', spend: 46_000,  revenue: 398_000 },
   ],
 };
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
 
-// Combined dashboard snapshot
 app.get('/api/dashboard', (req, res) => {
   res.json({
     success: true,
     timestamp: new Date().toISOString(),
     data: {
       crm: {
-        summary: crmData.summary,
+        summary:     crmData.summary,
         recentDeals: crmData.recentDeals.slice(0, 3),
-        pipeline: crmData.pipeline,
+        pipeline:    crmData.pipeline,
       },
       analytics: {
-        summary: analyticsData.summary,
+        summary:        analyticsData.summary,
         trafficSources: analyticsData.trafficSources,
         weeklyVisitors: analyticsData.weeklyVisitors,
       },
       marketing: {
-        summary: marketingData.summary,
-        campaigns: marketingData.campaigns.slice(0, 4),
+        summary:            marketingData.summary,
+        campaigns:          marketingData.campaigns.slice(0, 4),
         channelPerformance: marketingData.channelPerformance,
       },
     },
   });
 });
 
-// Full CRM data
-app.get('/api/crm', (req, res) => {
-  res.json({ success: true, timestamp: new Date().toISOString(), data: crmData });
-});
+app.get('/api/crm',       (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: crmData       }));
+app.get('/api/analytics', (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: analyticsData }));
+app.get('/api/marketing', (req, res) => res.json({ success: true, timestamp: new Date().toISOString(), data: marketingData }));
 
-// Full analytics data
-app.get('/api/analytics', (req, res) => {
-  res.json({ success: true, timestamp: new Date().toISOString(), data: analyticsData });
-});
-
-// Full marketing data
-app.get('/api/marketing', (req, res) => {
-  res.json({ success: true, timestamp: new Date().toISOString(), data: marketingData });
-});
-
-// Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
 });
@@ -173,15 +169,15 @@ if (process.env.NODE_ENV === 'production') {
   app.get('/', (req, res) => {
     res.send(`
       <html>
-        <body style="font-family:sans-serif;padding:2rem;background:#0f172a;color:#e2e8f0">
+        <body style="font-family:sans-serif;padding:2rem;background:#06090f;color:#eef2ff">
           <h1>🚀 Okiru HUB API — Dev Mode</h1>
           <p>Run <code>npm run build</code> then <code>npm start</code> to serve the full UI.</p>
-          <ul>
-            <li><a href="/api/health"    style="color:#38bdf8">/api/health</a></li>
-            <li><a href="/api/dashboard" style="color:#38bdf8">/api/dashboard</a></li>
-            <li><a href="/api/crm"       style="color:#38bdf8">/api/crm</a></li>
-            <li><a href="/api/analytics" style="color:#38bdf8">/api/analytics</a></li>
-            <li><a href="/api/marketing" style="color:#38bdf8">/api/marketing</a></li>
+          <ul style="margin-top:1rem;line-height:2.2">
+            <li><a href="/api/health"    style="color:#06CDE1">/api/health</a></li>
+            <li><a href="/api/dashboard" style="color:#06CDE1">/api/dashboard</a></li>
+            <li><a href="/api/crm"       style="color:#06CDE1">/api/crm</a></li>
+            <li><a href="/api/analytics" style="color:#06CDE1">/api/analytics</a></li>
+            <li><a href="/api/marketing" style="color:#06CDE1">/api/marketing</a></li>
           </ul>
         </body>
       </html>

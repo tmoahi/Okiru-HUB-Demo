@@ -25,9 +25,10 @@ export default function AnalyticsDashboard() {
   }));
 
   const conversionData = [
-    { label: 'Sign-ups',       value: data.conversions.signups      },
-    { label: 'Purchases',      value: data.conversions.purchases     },
-    { label: 'Demo Requests',  value: data.conversions.demoRequests  },
+    { label: 'Consultations',    value: data.conversions.consultationRequests },
+    { label: 'Training Sign-ups',value: data.conversions.trainingSignups      },
+    { label: 'Report Downloads', value: data.conversions.reportDownloads      },
+    { label: 'Demo Requests',    value: data.conversions.demoRequests         },
   ];
 
   return (

@@ -7,17 +7,17 @@ import LoadingSpinner from './LoadingSpinner';
 import './DashboardOverview.css';
 
 function fmt(n) {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}k`;
-  return `$${n}`;
+  if (n >= 1_000_000) return `R${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)     return `R${(n / 1_000).toFixed(0)}k`;
+  return `R${n}`;
 }
 
 const STAGE_COLORS = {
-  'Prospecting':   'var(--accent-blue)',
-  'Qualification': 'var(--accent-violet)',
-  'Proposal':      'var(--accent-amber)',
-  'Negotiation':   'var(--accent-rose)',
-  'Closed Won':    'var(--accent-emerald)',
+  'Discovery':     'var(--accent-blue)',
+  'Scoping':       'var(--accent-violet)',
+  'Proposal Sent': 'var(--accent-amber)',
+  'Contract':      'var(--accent-teal)',
+  'Delivery':      'var(--accent-emerald)',
 };
 
 export default function DashboardOverview() {
@@ -31,7 +31,7 @@ export default function DashboardOverview() {
   const pipelineChartData = crm.pipeline.map(p => ({
     label: p.stage.split(' ')[0],
     value: p.value,
-    color: STAGE_COLORS[p.stage],
+    color: STAGE_COLORS[p.stage] || 'var(--accent-blue)',
   }));
 
   const trafficChartData = analytics.trafficSources.map(s => ({
@@ -41,17 +41,16 @@ export default function DashboardOverview() {
 
   return (
     <div className="overview">
-      {/* ── KPI Row ── */}
       <section className="overview-kpis">
         <StatCard
           label="Total Revenue"
           value={fmt(crm.summary.totalRevenue)}
-          sub={`${crm.summary.wonDeals} deals closed`}
+          sub={`${crm.summary.wonDeals} engagements won`}
           accent="emerald"
           icon="💰"
         />
         <StatCard
-          label="Open Deals"
+          label="Active Engagements"
           value={crm.summary.openDeals}
           sub={`Avg size ${fmt(crm.summary.avgDealSize)}`}
           accent="blue"
@@ -73,36 +72,38 @@ export default function DashboardOverview() {
         />
       </section>
 
-      {/* ── Charts Row ── */}
       <section className="overview-charts">
-        <Card title="Sales Pipeline" subtitle="Value by stage">
-          <BarChart data={pipelineChartData} unit="$" height={160} />
+        <Card title="Engagement Pipeline" subtitle="Value by stage (R)">
+          <BarChart data={pipelineChartData} unit="R" height={160} />
         </Card>
         <Card title="Traffic Sources" subtitle="Visitors this period">
           <BarChart data={trafficChartData} height={160} />
         </Card>
       </section>
 
-      {/* ── Tables Row ── */}
       <section className="overview-tables">
-        <Card title="Recent Deals" subtitle="Latest activity">
+        <Card title="Recent Engagements" subtitle="Latest activity">
           <table className="data-table">
             <thead>
               <tr>
                 <th>Company</th>
-                <th>Contact</th>
+                <th>Service</th>
                 <th>Value</th>
                 <th>Stage</th>
-                <th>Days Open</th>
+                <th>Days</th>
               </tr>
             </thead>
             <tbody>
               {crm.recentDeals.map(deal => (
                 <tr key={deal.id}>
                   <td className="td-primary">{deal.company}</td>
-                  <td>{deal.contact}</td>
+                  <td><span className="service-tag">{deal.service}</span></td>
                   <td className="td-number">{fmt(deal.value)}</td>
-                  <td><span className={`badge badge--${deal.stage.toLowerCase().replace(/\s+/g, '-')}`}>{deal.stage}</span></td>
+                  <td>
+                    <span className={`badge badge--${deal.stage.toLowerCase().replace(/\s+/g, '-')}`}>
+                      {deal.stage}
+                    </span>
+                  </td>
                   <td className="td-muted">{deal.daysOpen}d</td>
                 </tr>
               ))}
