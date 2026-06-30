@@ -83,7 +83,7 @@ const COURSES = [
   },
 ];
 
-// ─── Users ────────────────────────────────────────────────────────────────────
+// ─── Users (mutable at runtime) ───────────────────────────────────────────────
 
 const USERS = [
   {
@@ -96,23 +96,46 @@ const USERS = [
     password: 'okiru2025',
     enrolledCourses: [],
     completedCourses: [],
+    invitedAt: null,
+    tempPassword: null,
   },
 ];
 
-const ADMIN_STATS = {
-  totalLearners: 0,
-  activeCourses: COURSES.length,
-  completionRate: '—',
-  certificatesIssued: 0,
-  enrollmentsThisMonth: 0,
-  avgRating: '—',
-  courseStats: COURSES.map(c => ({
-    id: c.id, title: c.title, category: c.category,
-    enrolled: c.enrolled, completionRate: c.completionRate,
-    rating: c.rating, completed: 0,
-  })),
-  recentLearners: [],
-};
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function generatePassword() {
+  const words  = ['Train', 'Learn', 'Grow', 'Build', 'Rise', 'Lead'];
+  const word   = words[Math.floor(Math.random() * words.length)];
+  const num    = Math.floor(100 + Math.random() * 900);
+  const chars  = '!@#$';
+  const symbol = chars[Math.floor(Math.random() * chars.length)];
+  return `${word}${num}${symbol}`;
+}
+
+function buildStats() {
+  const learners = USERS.filter(u => u.role === 'learner');
+  return {
+    totalLearners: learners.length,
+    activeCourses: COURSES.length,
+    completionRate: learners.length ? '—' : '—',
+    certificatesIssued: 0,
+    enrollmentsThisMonth: learners.length,
+    avgRating: '—',
+    courseStats: COURSES.map(c => ({
+      id: c.id, title: c.title, category: c.category,
+      enrolled: c.enrolled, completionRate: c.completionRate,
+      rating: c.rating, completed: 0,
+    })),
+    recentLearners: learners.slice(-10).reverse().map(u => ({
+      name: u.name,
+      email: u.email,
+      company: u.company,
+      enrolled: 0,
+      completed: 0,
+      lastActive: 'Invited',
+    })),
+  };
+}
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
@@ -127,14 +150,75 @@ app.get('/api/courses/:id', (req, res) => {
 });
 
 app.get('/api/admin/stats', (req, res) => {
-  res.json({ success: true, data: ADMIN_STATS });
+  res.json({ success: true, data: buildStats() });
+});
+
+// GET all learners
+app.get('/api/admin/learners', (req, res) => {
+  const learners = USERS
+    .filter(u => u.role === 'learner')
+    .map(({ password: _pw, ...u }) => u);
+  res.json({ success: true, data: learners });
+});
+
+// POST invite a new learner
+app.post('/api/admin/invite', (req, res) => {
+  const { name, email, company } = req.body;
+
+  if (!name || !email) {
+    return res.status(400).json({ success: false, error: 'Name and email are required.' });
+  }
+
+  const exists = USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
+  if (exists) {
+    return res.status(409).json({ success: false, error: 'A user with this email already exists.' });
+  }
+
+  const tempPassword = generatePassword();
+  const id = `learner_${Date.now()}`;
+
+  const newUser = {
+    id,
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    company: company ? company.trim() : '',
+    role: 'learner',
+    avatar: name.trim().split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(),
+    password: tempPassword,
+    enrolledCourses: [],
+    completedCourses: [],
+    invitedAt: new Date().toISOString(),
+    tempPassword,
+  };
+
+  USERS.push(newUser);
+
+  res.json({
+    success: true,
+    data: {
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      company: newUser.company,
+      tempPassword,
+      loginUrl: process.env.APP_URL || '',
+    },
+  });
+});
+
+// DELETE a learner
+app.delete('/api/admin/learners/:id', (req, res) => {
+  const idx = USERS.findIndex(u => u.id === req.params.id && u.role === 'learner');
+  if (idx === -1) return res.status(404).json({ success: false, error: 'Learner not found.' });
+  USERS.splice(idx, 1);
+  res.json({ success: true });
 });
 
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
   const user = USERS.find(u => u.email === email && u.password === password);
   if (!user) return res.status(401).json({ success: false, error: 'Invalid credentials' });
-  const { password: _pw, ...safe } = user;
+  const { password: _pw, tempPassword: _tp, ...safe } = user;
   res.json({ success: true, data: safe });
 });
 

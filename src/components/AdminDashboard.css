@@ -1,6 +1,7 @@
 .admin { display: flex; flex-direction: column; gap: 24px; }
-.admin-welcome { display: flex; align-items: center; justify-content: space-between; }
+.admin-welcome { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .admin-title { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+.admin-actions { display: flex; gap: 10px; align-items: center; }
 .admin-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .admin-cat { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; border: 1px solid; text-transform: uppercase; letter-spacing: 0.06em; display: inline-block; }
 .admin-prog-row { display: flex; align-items: center; gap: 8px; }
@@ -9,4 +10,82 @@
 .admin-learner-row { display: flex; align-items: center; gap: 10px; }
 .admin-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--okiru-gradient); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
 .admin-table { width: 100%; }
-@media (max-width: 768px) { .admin-kpis { grid-template-columns: repeat(2, 1fr); } }
+
+/* Status badges */
+.status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.06em; display: inline-block; }
+.status-invited { color: #06CDE1; background: rgba(6,205,225,0.1); border: 1px solid rgba(6,205,225,0.25); }
+.status-active  { color: #10e8a0; background: rgba(16,232,160,0.1); border: 1px solid rgba(16,232,160,0.25); }
+
+/* Remove learner icon button */
+.btn-icon-danger { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; padding: 4px 8px; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+.btn-icon-danger:hover { color: var(--accent-rose); background: rgba(239,68,68,0.08); }
+
+/* Danger button */
+.btn-danger { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); padding: 9px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+.btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+/* Empty state */
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 40px 20px; text-align: center; }
+.empty-icon { font-size: 36px; opacity: 0.5; }
+.empty-text { color: var(--text-muted); font-size: 14px; margin: 0; }
+
+/* ─── Modal ─────────────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  width: 100%; max-width: 480px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  animation: slideUp 0.18s ease;
+}
+.modal-sm { max-width: 380px; padding: 24px; }
+@keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 24px 0;
+}
+.modal-title { font-size: 17px; font-weight: 700; }
+.modal-close { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 4px 8px; border-radius: 6px; line-height: 1; }
+.modal-close:hover { color: var(--text-primary); background: var(--bg-surface); }
+.modal-sub { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0; }
+
+/* ─── Invite form ────────────────────────────────────────────────────────────── */
+.invite-form { display: flex; flex-direction: column; gap: 14px; padding: 20px 24px 24px; }
+.invite-form label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+.invite-form input { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; color: var(--text-primary); font-size: 14px; outline: none; }
+.invite-form input:focus { border-color: var(--accent-teal); box-shadow: 0 0 0 3px rgba(6,205,225,0.12); }
+.invite-error { color: var(--accent-rose); font-size: 12px; margin: -6px 0 0; }
+.req { color: var(--accent-rose); margin-left: 2px; }
+.invite-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
+
+/* ─── Success state ──────────────────────────────────────────────────────────── */
+.invite-success { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px; text-align: center; }
+.invite-success-icon { font-size: 32px; }
+.invite-success-title { font-size: 16px; font-weight: 700; margin: 0; }
+
+.credential-box {
+  width: 100%; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; text-align: left;
+}
+.credential-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.credential-row:last-child { border-bottom: none; }
+.cred-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); min-width: 110px; padding-top: 1px; }
+.cred-value { font-size: 13px; color: var(--text-primary); word-break: break-all; }
+.cred-password { font-family: monospace; color: var(--accent-teal); font-weight: 700; font-size: 15px; }
+.cred-url { color: var(--text-muted); font-size: 12px; }
+
+@media (max-width: 768px) {
+  .admin-kpis { grid-template-columns: repeat(2, 1fr); }
+  .admin-welcome { flex-direction: column; align-items: flex-start; }
+}
