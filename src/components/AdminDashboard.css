@@ -85,6 +85,9 @@
 .cred-password { font-family: monospace; color: var(--accent-teal); font-weight: 700; font-size: 15px; }
 .cred-url { color: var(--text-muted); font-size: 12px; }
 
+.email-sent-note { color: var(--accent-emerald) !important; }
+.email-warn-note { color: #f59e0b !important; }
+
 @media (max-width: 768px) {
   .admin-kpis { grid-template-columns: repeat(2, 1fr); }
   .admin-welcome { flex-direction: column; align-items: flex-start; }

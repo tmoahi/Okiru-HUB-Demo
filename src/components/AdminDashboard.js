@@ -41,7 +41,7 @@ function InviteModal({ onClose, onSuccess }) {
   };
 
   const credText = result
-    ? `Okiru Learn — Login Credentials\n\nName: ${result.name}\nEmail: ${result.email}\nPassword: ${result.tempPassword}\n\nLogin at: https://okiru-hub-demo-production-eb58.up.railway.app\n\nThis is a temporary password.`
+    ? `Okiru Learn — Login Credentials\n\nName: ${result.name}\nUsername: ${result.username}\nPassword: ${result.password}\n\nLogin at: ${result.loginUrl}\n\nThis is a temporary password. You can reset it via "Forgot password?" on the login page.`
     : '';
 
   const copy = () => {
@@ -60,7 +60,7 @@ function InviteModal({ onClose, onSuccess }) {
 
         {!result ? (
           <form onSubmit={submit} className="invite-form">
-            <p className="modal-sub">A temporary password will be generated. Share the credentials with the learner so they can sign in immediately.</p>
+            <p className="modal-sub">An account will be created and an invitation email sent with their login credentials.</p>
             <label>
               Full name <span className="req">*</span>
               <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Jane Smith" required />
@@ -85,19 +85,22 @@ function InviteModal({ onClose, onSuccess }) {
           <div className="invite-success">
             <div className="invite-success-icon">✅</div>
             <h4 className="invite-success-title">Account created for {result.name}</h4>
-            <p className="modal-sub">Share these credentials. The learner can log in immediately.</p>
+            {result.emailSent
+              ? <p className="modal-sub email-sent-note">📧 Invitation email sent to <strong>{result.email}</strong> with their login credentials.</p>
+              : <p className="modal-sub email-warn-note">⚠️ Email could not be sent — share these credentials manually.</p>
+            }
             <div className="credential-box">
               <div className="credential-row">
-                <span className="cred-label">Email</span>
-                <span className="cred-value">{result.email}</span>
+                <span className="cred-label">Username</span>
+                <span className="cred-value">{result.username}</span>
               </div>
               <div className="credential-row">
                 <span className="cred-label">Password</span>
-                <span className="cred-value cred-password">{result.tempPassword}</span>
+                <span className="cred-value cred-password">{result.password}</span>
               </div>
               <div className="credential-row">
                 <span className="cred-label">Login URL</span>
-                <span className="cred-value cred-url">okiru-hub-demo-production-eb58.up.railway.app</span>
+                <span className="cred-value cred-url">{result.loginUrl}</span>
               </div>
             </div>
             <div className="invite-actions">

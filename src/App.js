@@ -3,6 +3,7 @@ import './App.css';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Login from './components/Login';
+import ResetPassword from './components/ResetPassword';
 import LearnerPortal from './components/LearnerPortal';
 import CourseCatalogue from './components/CourseCatalogue';
 import LessonPlayer from './components/LessonPlayer';
@@ -45,6 +46,20 @@ export default function App() {
 
   const handleLogin  = (userData) => { setUser(userData); setView(userData.role === 'admin' ? 'admin' : 'portal'); };
   const handleLogout = () => { setUser(null); setView('portal'); };
+
+  // Handle password reset links: ?reset=TOKEN
+  const resetToken = new URLSearchParams(window.location.search).get('reset');
+  if (resetToken) {
+    return (
+      <ResetPassword
+        token={resetToken}
+        onSuccess={() => {
+          window.history.replaceState({}, '', window.location.pathname);
+          window.location.reload();
+        }}
+      />
+    );
+  }
 
   if (!user) return <Login onLogin={handleLogin} />;
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import OkiruLogo from './OkiruLogo';
+import ForgotPassword from './ForgotPassword';
 import './Login.css';
 
 export default function Login({ onLogin }) {
@@ -7,6 +8,9 @@ export default function Login({ onLogin }) {
   const [password, setPassword] = useState('');
   const [error,    setError]    = useState('');
   const [loading,  setLoading]  = useState(false);
+  const [forgot,   setForgot]   = useState(false);
+
+  if (forgot) return <ForgotPassword onBack={() => setForgot(false)} />;
 
   const attempt = async (emailVal, passwordVal) => {
     setLoading(true);
@@ -47,7 +51,7 @@ export default function Login({ onLogin }) {
               type="text"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder="you@company.co.za"
+              placeholder="username or email"
               autoComplete="email"
               required
             />
@@ -66,6 +70,9 @@ export default function Login({ onLogin }) {
           {error && <p className="login-error">{error}</p>}
           <button className="btn btn-primary login-btn" type="submit" disabled={loading || !email || !password}>
             {loading ? 'Signing in…' : 'Sign in →'}
+          </button>
+          <button type="button" className="link-btn" style={{ textAlign: 'center', marginTop: -4 }} onClick={() => setForgot(true)}>
+            Forgot password?
           </button>
         </form>
 
