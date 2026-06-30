@@ -6,21 +6,8 @@
     radial-gradient(ellipse 40% 30% at 100% 100%, rgba(186,13,167,0.04) 0%, transparent 60%),
     var(--bg-base);
 }
-
-.app-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.app-content {
-  flex: 1;
-  padding: 24px 28px;
-  overflow-y: auto;
-}
-
+.app-main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.app-content { flex: 1; padding: 24px 28px; overflow-y: auto; }
 @media (max-width: 768px) {
   .app-shell { flex-direction: column; }
   .app-content { padding: 16px; }

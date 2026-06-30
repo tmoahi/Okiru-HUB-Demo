@@ -22,13 +22,9 @@ export default function OkiruLogo({ size = 36, className = '' }) {
           <stop offset="100%" stopColor="#BA0DA7" stopOpacity="0.08" />
         </linearGradient>
       </defs>
-      {/* filled background disc */}
       <circle cx="24" cy="24" r="23" fill="url(#ok-g2)" />
-      {/* outer ring */}
       <circle cx="24" cy="24" r="22" stroke="url(#ok-g1)" strokeWidth="2" />
-      {/* inner circle — the O */}
       <circle cx="24" cy="24" r="10.5" stroke="url(#ok-g1)" strokeWidth="2.5" />
-      {/* diagonal bar — the K stem */}
       <line x1="30" y1="12" x2="18" y2="36" stroke="url(#ok-g1)" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   );

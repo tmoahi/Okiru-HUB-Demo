@@ -1,0 +1,12 @@
+.admin { display: flex; flex-direction: column; gap: 24px; }
+.admin-welcome { display: flex; align-items: center; justify-content: space-between; }
+.admin-title { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+.admin-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.admin-cat { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; border: 1px solid; text-transform: uppercase; letter-spacing: 0.06em; display: inline-block; }
+.admin-prog-row { display: flex; align-items: center; gap: 8px; }
+.admin-prog-bar { flex: 1; height: 5px; background: var(--bg-surface); border-radius: 99px; overflow: hidden; min-width: 60px; }
+.admin-prog-fill { height: 100%; border-radius: 99px; transition: width 0.3s ease; }
+.admin-learner-row { display: flex; align-items: center; gap: 10px; }
+.admin-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--okiru-gradient); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.admin-table { width: 100%; }
+@media (max-width: 768px) { .admin-kpis { grid-template-columns: repeat(2, 1fr); } }
