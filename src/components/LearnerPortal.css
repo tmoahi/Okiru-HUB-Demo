@@ -1,0 +1,41 @@
+.portal { display: flex; flex-direction: column; gap: 24px; }
+.portal-welcome { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 4px; }
+.portal-greeting { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+.portal-company  { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+.portal-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.pstat {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl);
+  padding: 18px 20px; display: flex; flex-direction: column; gap: 4px;
+}
+.pstat-val { font-size: 28px; font-weight: 700; background: var(--okiru-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1; }
+.pstat-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.portal-empty { text-align: center; padding: 60px 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.portal-empty-icon { font-size: 48px; }
+.portal-empty h3 { font-size: 18px; font-weight: 700; }
+.portal-empty p { color: var(--text-muted); max-width: 300px; }
+.portal-course-list { display: flex; flex-direction: column; gap: 12px; }
+.portal-course-row {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px 18px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.portal-course-row:hover { border-color: var(--border-accent); box-shadow: var(--shadow-sm); }
+.pcr-accent { width: 4px; height: 56px; border-radius: 99px; flex-shrink: 0; }
+.pcr-info { flex: 1; min-width: 0; }
+.pcr-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.pcr-category { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; border: 1px solid; text-transform: uppercase; letter-spacing: 0.06em; }
+.pcr-level { font-size: 11px; color: var(--text-muted); }
+.pcr-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pcr-instructor { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.pcr-progress-row { display: flex; align-items: center; gap: 8px; }
+.pcr-bar { flex: 1; height: 4px; background: var(--bg-surface); border-radius: 99px; overflow: hidden; }
+.pcr-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+.pcr-pct { font-size: 11px; font-weight: 600; color: var(--text-secondary); min-width: 28px; text-align: right; }
+.pcr-action { flex-shrink: 0; }
+@media (max-width: 768px) {
+  .portal-stats { grid-template-columns: repeat(2, 1fr); }
+  .portal-course-row { flex-wrap: wrap; }
+  .pcr-action { width: 100%; }
+  .pcr-action .btn { width: 100%; justify-content: center; }
+}

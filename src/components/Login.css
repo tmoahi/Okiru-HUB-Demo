@@ -1,0 +1,62 @@
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+.login-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(6,205,225,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(186,13,167,0.06) 0%, transparent 60%);
+}
+.login-card {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 440px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 40px 36px;
+  box-shadow: var(--shadow-lg);
+}
+.login-brand {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 32px;
+}
+.login-title {
+  font-size: 22px; font-weight: 700;
+  background: var(--okiru-gradient);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1.2;
+}
+.login-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+.login-form { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+.login-btn { width: 100%; justify-content: center; padding: 12px; font-size: 14px; }
+.login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.login-error { color: var(--accent-rose); font-size: 12px; margin-top: -8px; }
+.login-demo { border-top: 1px solid var(--border); padding-top: 24px; }
+.login-demo-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.login-demo-grid { display: flex; flex-direction: column; gap: 8px; }
+.demo-account {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: var(--radius-md);
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  cursor: pointer; text-align: left; transition: all 0.15s ease;
+  width: 100%;
+}
+.demo-account:hover { background: var(--bg-hover); border-color: var(--border-accent); }
+.demo-avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.demo-info { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+.demo-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.demo-company { font-size: 11px; color: var(--text-muted); }
+.demo-role { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.06em; }
+.demo-role--learner { background: rgba(6,205,225,0.1); color: var(--accent-teal); }
+.demo-role--admin   { background: rgba(186,13,167,0.1); color: var(--accent-violet); }

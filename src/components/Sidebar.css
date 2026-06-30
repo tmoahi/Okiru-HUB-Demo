@@ -65,6 +65,12 @@
 }
 .user-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
 .user-role { font-size: 11px; color: var(--text-muted); }
+.logout-btn {
+  margin-left: auto; background: none; border: none; color: var(--text-muted);
+  font-size: 16px; cursor: pointer; padding: 4px 6px; border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+}
+.logout-btn:hover { color: var(--accent-rose); background: rgba(251,113,133,0.1); }
 @media (max-width: 768px) {
   .sidebar { width: 100%; min-height: auto; height: auto; position: static; flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid var(--border); }
   .sidebar::before { display: none; }

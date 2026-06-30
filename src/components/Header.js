@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css';
 
-export default function Header({ activeView, views }) {
+const VIEW_LABELS = {
+  portal:       'My Learning',
+  catalogue:    'Course Catalogue',
+  lesson:       'Lesson',
+  certificates: 'Certificates',
+  admin:        'Admin Dashboard',
+};
+
+export default function Header({ view }) {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -9,13 +17,13 @@ export default function Header({ activeView, views }) {
     return () => clearInterval(timer);
   }, []);
 
-  const label = views[activeView]?.label ?? 'Dashboard';
+  const label = VIEW_LABELS[view] || 'Okiru LMS';
 
   return (
     <header className="header">
       <div className="header-left">
         <h1 className="header-title">{label}</h1>
-        <span className="header-breadcrumb">Okiru HUB / {label}</span>
+        <span className="header-breadcrumb">Okiru LMS / {label}</span>
       </div>
       <div className="header-right">
         <div className="header-time">
