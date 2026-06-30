@@ -1,8 +1,8 @@
-const express    = require('express');
-const cors       = require('cors');
-const path       = require('path');
-const crypto     = require('crypto');
-const nodemailer = require('nodemailer');
+const express = require('express');
+const cors    = require('cors');
+const path    = require('path');
+const crypto  = require('crypto');
+const { Resend } = require('resend');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -10,32 +10,28 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// ─── Email transporter ────────────────────────────────────────────────────────
+// ─── Email (Resend) ───────────────────────────────────────────────────────────
 
-const EMAIL_USER = process.env.EMAIL_USER || '';
-const EMAIL_PASS = process.env.EMAIL_PASS || '';
-const APP_URL    = process.env.APP_URL    || 'https://okiru-hub-demo-production-eb58.up.railway.app';
-
-function createTransporter() {
-  if (!EMAIL_USER || !EMAIL_PASS) return null;
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: EMAIL_USER, pass: EMAIL_PASS },
-  });
-}
+const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
+const APP_URL        = process.env.APP_URL || 'https://okiru-hub-demo-production-eb58.up.railway.app';
+const FROM_EMAIL     = 'Okiru Learn <onboarding@resend.dev>';
 
 async function sendEmail({ to, subject, html }) {
-  const transporter = createTransporter();
-  if (!transporter) {
-    console.warn('[email] EMAIL_USER / EMAIL_PASS env vars not set — email skipped');
-    return { sent: false, reason: 'EMAIL_USER and EMAIL_PASS are not configured on the server.' };
+  if (!RESEND_API_KEY) {
+    console.warn('[email] RESEND_API_KEY not set — email skipped');
+    return { sent: false, reason: 'RESEND_API_KEY is not configured on the server.' };
   }
   try {
-    const info = await transporter.sendMail({ from: `"Okiru Learn" <${EMAIL_USER}>`, to, subject, html });
-    console.log('[email] sent OK to', to, '— messageId:', info.messageId);
+    const resend = new Resend(RESEND_API_KEY);
+    const { data, error } = await resend.emails.send({ from: FROM_EMAIL, to, subject, html });
+    if (error) {
+      console.error('[email] Resend error:', error.message);
+      return { sent: false, reason: error.message };
+    }
+    console.log('[email] sent OK to', to, '— id:', data.id);
     return { sent: true };
   } catch (err) {
-    console.error('[email] FAILED to', to, '—', err.message);
+    console.error('[email] FAILED:', err.message);
     return { sent: false, reason: err.message };
   }
 }
@@ -380,16 +376,17 @@ app.get('/api/health', (req, res) => {
 // Email config check (admin use only — shows whether vars are set and attempts a test send)
 app.post('/api/admin/test-email', async (req, res) => {
   const { to } = req.body;
-  if (!EMAIL_USER || !EMAIL_PASS) {
+  if (!RESEND_API_KEY) {
     return res.json({
       configured: false,
-      error: 'EMAIL_USER and/or EMAIL_PASS environment variables are not set on the server.',
+      error: 'RESEND_API_KEY environment variable is not set on the server.',
     });
   }
+  if (!to) return res.status(400).json({ success: false, error: 'Provide a "to" email address.' });
   const result = await sendEmail({
-    to: to || EMAIL_USER,
-    subject: 'Okiru Learn — Email test',
-    html: '<p style="font-family:sans-serif">Email is working correctly from Okiru Learn ✅</p>',
+    to,
+    subject: 'Okiru Learn — Email test ✅',
+    html: '<p style="font-family:sans-serif;color:#0a0a0f">Email is working correctly from Okiru Learn ✅</p>',
   });
   res.json({ configured: true, ...result });
 });
