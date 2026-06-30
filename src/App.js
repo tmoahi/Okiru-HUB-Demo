@@ -34,6 +34,20 @@ export default function App() {
     saveState({ enrollments: [...enrollments], progress, quizScores });
   }, [enrollments, progress, quizScores]);
 
+  // Heartbeat — reports every 30s while a learner is active
+  useEffect(() => {
+    if (!user || user.role === 'admin') return;
+    const INTERVAL = 30;
+    const id = setInterval(() => {
+      fetch('/api/learner/heartbeat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, seconds: INTERVAL }),
+      }).catch(() => {});
+    }, INTERVAL * 1000);
+    return () => clearInterval(id);
+  }, [user]);
+
   const navigateTo = (v, courseId = null, moduleId = null) => {
     setView(v);
     if (courseId !== null) setSelectedCourse(courseId);

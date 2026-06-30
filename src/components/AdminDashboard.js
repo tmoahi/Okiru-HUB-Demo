@@ -195,12 +195,12 @@ export default function AdminDashboard({ navigateTo }) {
       </div>
 
       <section className="admin-kpis">
-        <StatCard label="Total Learners"       value={stats.totalLearners.toLocaleString()} accent="blue"    icon="👥" />
-        <StatCard label="Active Courses"        value={stats.activeCourses}                  accent="violet"  icon="📚" />
-        <StatCard label="Avg Completion Rate"   value={stats.completionRate}                 accent="emerald" icon="✅" />
-        <StatCard label="Certificates Issued"   value={stats.certificatesIssued}             accent="amber"   icon="🏆" />
-        <StatCard label="Enrolments This Month" value={stats.enrollmentsThisMonth}           accent="rose"    icon="📈" />
-        <StatCard label="Avg Course Rating"     value={stats.avgRating}                      accent="blue"    icon="⭐" />
+        <StatCard label="Total Learners"       value={stats.totalLearners.toLocaleString()}  accent="blue"    icon="👥" />
+        <StatCard label="Active Learners"       value={stats.activeLearners || 0}             accent="emerald" icon="🟢" />
+        <StatCard label="Active Courses"        value={stats.activeCourses}                   accent="violet"  icon="📚" />
+        <StatCard label="Certificates Issued"   value={stats.certificatesIssued}              accent="amber"   icon="🏆" />
+        <StatCard label="Enrolments This Month" value={stats.enrollmentsThisMonth}            accent="rose"    icon="📈" />
+        <StatCard label="Avg Course Rating"     value={stats.avgRating}                       accent="blue"    icon="⭐" />
       </section>
 
       <Card
@@ -218,30 +218,45 @@ export default function AdminDashboard({ navigateTo }) {
         ) : (
           <table className="data-table admin-table">
             <thead>
-              <tr><th>Name</th><th>Email</th><th>Company</th><th>Status</th><th>Invited</th><th></th></tr>
+              <tr><th>Name</th><th>Email</th><th>Company</th><th>Status</th><th>Last Seen</th><th>Time in LMS</th><th>Invited</th><th></th></tr>
             </thead>
             <tbody>
-              {learners.map(l => (
-                <tr key={l.id}>
-                  <td>
-                    <div className="admin-learner-row">
-                      <div className="admin-avatar">{l.avatar}</div>
-                      <span className="td-primary">{l.name}</span>
-                    </div>
-                  </td>
-                  <td className="td-muted">{l.email}</td>
-                  <td className="td-muted">{l.company || '—'}</td>
-                  <td><span className="status-badge status-invited">Invited</span></td>
-                  <td className="td-muted">
-                    {l.invitedAt
-                      ? new Date(l.invitedAt).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })
-                      : '—'}
-                  </td>
-                  <td>
-                    <button className="btn-icon-danger" title="Remove learner" onClick={() => setDeleteTarget(l)}>✕</button>
-                  </td>
-                </tr>
-              ))}
+              {learners.map(l => {
+                const lastSeen = l.lastSeen || l.lastLogin;
+                return (
+                  <tr key={l.id}>
+                    <td>
+                      <div className="admin-learner-row">
+                        <div className="admin-avatar">{l.avatar}</div>
+                        <span className="td-primary">{l.name}</span>
+                      </div>
+                    </td>
+                    <td className="td-muted">{l.email}</td>
+                    <td className="td-muted">{l.company || '—'}</td>
+                    <td>
+                      <span className={`status-badge ${l.status === 'active' ? 'status-active' : 'status-invited'}`}>
+                        {l.status === 'active' ? 'Active' : 'Invited'}
+                      </span>
+                    </td>
+                    <td className="td-muted">
+                      {lastSeen
+                        ? new Date(lastSeen).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+                        : '—'}
+                    </td>
+                    <td className="td-number" style={{ color: l.totalTimeSeconds > 0 ? 'var(--accent-teal)' : undefined }}>
+                      {l.timeFormatted || '0m'}
+                    </td>
+                    <td className="td-muted">
+                      {l.invitedAt
+                        ? new Date(l.invitedAt).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })
+                        : '—'}
+                    </td>
+                    <td>
+                      <button className="btn-icon-danger" title="Remove learner" onClick={() => setDeleteTarget(l)}>✕</button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}

@@ -179,6 +179,9 @@ const USERS = [
     enrolledCourses: [],
     completedCourses: [],
     invitedAt: null,
+    status: 'active',
+    lastLogin: null,
+    totalTimeSeconds: 0,
   },
 ];
 
@@ -210,10 +213,20 @@ function generateUsername(name) {
   return username;
 }
 
+function formatTime(seconds) {
+  if (!seconds) return '0m';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
+
 function buildStats() {
   const learners = USERS.filter(u => u.role === 'learner');
+  const active   = learners.filter(u => u.status === 'active').length;
   return {
     totalLearners: learners.length,
+    activeLearners: active,
     activeCourses: COURSES.length,
     completionRate: '—',
     certificatesIssued: 0,
@@ -224,7 +237,10 @@ function buildStats() {
       enrolled: c.enrolled, completionRate: c.completionRate, rating: c.rating, completed: 0,
     })),
     recentLearners: learners.slice(-10).reverse().map(u => ({
-      name: u.name, email: u.email, company: u.company, enrolled: 0, completed: 0, lastActive: 'Invited',
+      name: u.name, email: u.email, company: u.company,
+      enrolled: 0, completed: 0,
+      lastActive: u.lastSeen || u.lastLogin || 'Never',
+      status: u.status || 'invited',
     })),
   };
 }
@@ -248,7 +264,10 @@ app.get('/api/admin/stats', (req, res) => {
 app.get('/api/admin/learners', (req, res) => {
   const learners = USERS
     .filter(u => u.role === 'learner')
-    .map(({ password: _pw, ...u }) => u);
+    .map(({ password: _pw, ...u }) => ({
+      ...u,
+      timeFormatted: formatTime(u.totalTimeSeconds),
+    }));
   res.json({ success: true, data: learners });
 });
 
@@ -277,7 +296,10 @@ app.post('/api/admin/invite', async (req, res) => {
     password,
     enrolledCourses:  [],
     completedCourses: [],
-    invitedAt: new Date().toISOString(),
+    invitedAt:        new Date().toISOString(),
+    status:           'invited',
+    lastLogin:        null,
+    totalTimeSeconds: 0,
   };
 
   USERS.push(newUser);
@@ -321,8 +343,23 @@ app.post('/api/auth/login', (req, res) => {
     (u.email === identifier || u.username === identifier) && u.password === password
   );
   if (!user) return res.status(401).json({ success: false, error: 'Invalid credentials' });
+
+  // Update login tracking
+  user.lastLogin = new Date().toISOString();
+  if (user.status === 'invited') user.status = 'active';
+
   const { password: _pw, ...safe } = user;
   res.json({ success: true, data: safe });
+});
+
+// POST — heartbeat (called every 30s while learner is in the LMS)
+app.post('/api/learner/heartbeat', (req, res) => {
+  const { userId, seconds } = req.body;
+  const user = USERS.find(u => u.id === userId);
+  if (!user) return res.status(404).json({ success: false });
+  user.totalTimeSeconds = (user.totalTimeSeconds || 0) + (seconds || 30);
+  user.lastSeen = new Date().toISOString();
+  res.json({ success: true });
 });
 
 // POST — forgot password (send reset email)
