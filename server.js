@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// ─── Okiru Training — Course Catalogue ───────────────────────────────────────
+// ─── Okiru Learn — Course Catalogue ───────────────────────────────────────
 
 const COURSES = [
   {
@@ -20,7 +20,7 @@ const COURSES = [
     lessonCount: 0,
     description: 'Artificial Intelligence tools can significantly improve productivity when working with Microsoft Word, Excel and PowerPoint. They help users write documents faster, summarise content, analyse data, and create presentations with ease.',
     zohoUrl: 'https://okiru-training.zoholearn.com/c/using-ai-with-microsoft-office',
-    instructor: { name: 'Okiru Training', title: 'Okiru' },
+    instructor: { name: 'Okiru Learn', title: 'Okiru' },
     enrolled: 0, completionRate: 0, rating: 0, reviews: 0,
     color: '#06CDE1',
     modules: [],
@@ -34,7 +34,7 @@ const COURSES = [
     lessonCount: 0,
     description: 'Safe AI Use & Compliance equips professionals with the knowledge and practical tools to use AI responsibly, securely, and in alignment with organisational policies, ethical guidelines, and emerging regulatory frameworks.',
     zohoUrl: 'https://okiru-training.zoholearn.com/c/safe-ai-use-compliance',
-    instructor: { name: 'Okiru Training', title: 'Okiru' },
+    instructor: { name: 'Okiru Learn', title: 'Okiru' },
     enrolled: 0, completionRate: 0, rating: 0, reviews: 0,
     color: '#10e8a0',
     modules: [],
@@ -48,7 +48,7 @@ const COURSES = [
     lessonCount: 0,
     description: 'A fast, hands-on session that teaches professionals how to use generative AI to turn messy information into clear reports, insights, and recommendations — without needing advanced technical skills.',
     zohoUrl: 'https://okiru-training.zoholearn.com/c/ai-powered-reporting-analysis',
-    instructor: { name: 'Okiru Training', title: 'Okiru' },
+    instructor: { name: 'Okiru Learn', title: 'Okiru' },
     enrolled: 0, completionRate: 0, rating: 0, reviews: 0,
     color: '#FF7512',
     modules: [],
@@ -62,7 +62,7 @@ const COURSES = [
     lessonCount: 0,
     description: 'Prompt Mastery & Creativity is a practical, hands-on course that teaches professionals how to communicate effectively with generative AI to unlock high-quality, reliable, and creative outputs across any professional context.',
     zohoUrl: 'https://okiru-training.zoholearn.com/c/prompt-mastery-creativity',
-    instructor: { name: 'Okiru Training', title: 'Okiru' },
+    instructor: { name: 'Okiru Learn', title: 'Okiru' },
     enrolled: 0, completionRate: 0, rating: 0, reviews: 0,
     color: '#BA0DA7',
     modules: [],
@@ -231,5 +231,5 @@ if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'build', 'index.html')));
 }
 
-app.listen(PORT, () => console.log(`Okiru Training LMS running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Okiru Learn LMS running on port ${PORT}`));
 module.exports = app;

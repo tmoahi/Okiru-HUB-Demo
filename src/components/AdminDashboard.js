@@ -41,7 +41,7 @@ function InviteModal({ onClose, onSuccess }) {
   };
 
   const credText = result
-    ? `Okiru Training — Login Credentials\n\nName: ${result.name}\nEmail: ${result.email}\nPassword: ${result.tempPassword}\n\nLogin at: https://okiru-hub-demo-production-eb58.up.railway.app\n\nThis is a temporary password.`
+    ? `Okiru Learn — Login Credentials\n\nName: ${result.name}\nEmail: ${result.email}\nPassword: ${result.tempPassword}\n\nLogin at: https://okiru-hub-demo-production-eb58.up.railway.app\n\nThis is a temporary password.`
     : '';
 
   const copy = () => {

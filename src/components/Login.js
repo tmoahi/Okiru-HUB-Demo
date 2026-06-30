@@ -31,7 +31,7 @@ export default function Login({ onLogin }) {
         <div className="login-brand">
           <OkiruLogo size={52} />
           <div>
-            <h1 className="login-title">Okiru Training</h1>
+            <h1 className="login-title">Okiru Learn</h1>
             <p className="login-sub">Professional Learning Portal</p>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function Login({ onLogin }) {
         </form>
 
         <p className="login-footer">
-          Need access? Contact your Okiru Training administrator.
+          Need access? Contact your Okiru Learn administrator.
         </p>
       </div>
     </div>

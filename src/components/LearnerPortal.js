@@ -48,7 +48,7 @@ export default function LearnerPortal({ user, enrollments, progress, quizScores,
           <div className="onboarding-glow" />
           <div className="onboarding-content">
             <div className="onboarding-icon">🎓</div>
-            <h3 className="onboarding-title">Welcome to Okiru Training, {user.name.split(' ')[0]}!</h3>
+            <h3 className="onboarding-title">Welcome to Okiru Learn, {user.name.split(' ')[0]}!</h3>
             <p className="onboarding-sub">
               You've been given access to Okiru's professional AI &amp; compliance learning platform.
               Browse the catalogue and enrol in any course to get started.

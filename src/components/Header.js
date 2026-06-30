@@ -17,13 +17,13 @@ export default function Header({ view }) {
     return () => clearInterval(timer);
   }, []);
 
-  const label = VIEW_LABELS[view] || 'Okiru LMS';
+  const label = VIEW_LABELS[view] || 'Okiru Learn';
 
   return (
     <header className="header">
       <div className="header-left">
         <h1 className="header-title">{label}</h1>
-        <span className="header-breadcrumb">Okiru LMS / {label}</span>
+        <span className="header-breadcrumb">Okiru Learn / {label}</span>
       </div>
       <div className="header-right">
         <div className="header-time">
