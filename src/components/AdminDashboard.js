@@ -87,7 +87,7 @@ function InviteModal({ onClose, onSuccess }) {
             <h4 className="invite-success-title">Account created for {result.name}</h4>
             {result.emailSent
               ? <p className="modal-sub email-sent-note">📧 Invitation email sent to <strong>{result.email}</strong> with their login credentials.</p>
-              : <p className="modal-sub email-warn-note">⚠️ Email could not be sent — share these credentials manually.</p>
+              : <p className="modal-sub email-warn-note">⚠️ Email not sent: {result.emailNote} Share these credentials manually.</p>
             }
             <div className="credential-box">
               <div className="credential-row">

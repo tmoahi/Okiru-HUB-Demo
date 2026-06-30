@@ -27,14 +27,15 @@ function createTransporter() {
 async function sendEmail({ to, subject, html }) {
   const transporter = createTransporter();
   if (!transporter) {
-    console.warn('[email] EMAIL_USER / EMAIL_PASS not set — skipping send');
-    return { sent: false, reason: 'Email not configured' };
+    console.warn('[email] EMAIL_USER / EMAIL_PASS env vars not set — email skipped');
+    return { sent: false, reason: 'EMAIL_USER and EMAIL_PASS are not configured on the server.' };
   }
   try {
-    await transporter.sendMail({ from: `"Okiru Learn" <${EMAIL_USER}>`, to, subject, html });
+    const info = await transporter.sendMail({ from: `"Okiru Learn" <${EMAIL_USER}>`, to, subject, html });
+    console.log('[email] sent OK to', to, '— messageId:', info.messageId);
     return { sent: true };
   } catch (err) {
-    console.error('[email] send failed:', err.message);
+    console.error('[email] FAILED to', to, '—', err.message);
     return { sent: false, reason: err.message };
   }
 }
@@ -303,7 +304,7 @@ app.post('/api/admin/invite', async (req, res) => {
       password,
       loginUrl: APP_URL,
       emailSent: emailResult.sent,
-      emailNote: emailResult.sent ? null : 'Email could not be sent — share credentials manually.',
+      emailNote: emailResult.sent ? null : (emailResult.reason || 'Email could not be sent — share credentials manually.'),
     },
   });
 });
@@ -374,6 +375,23 @@ app.post('/api/auth/reset-password', (req, res) => {
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime() });
+});
+
+// Email config check (admin use only — shows whether vars are set and attempts a test send)
+app.post('/api/admin/test-email', async (req, res) => {
+  const { to } = req.body;
+  if (!EMAIL_USER || !EMAIL_PASS) {
+    return res.json({
+      configured: false,
+      error: 'EMAIL_USER and/or EMAIL_PASS environment variables are not set on the server.',
+    });
+  }
+  const result = await sendEmail({
+    to: to || EMAIL_USER,
+    subject: 'Okiru Learn — Email test',
+    html: '<p style="font-family:sans-serif">Email is working correctly from Okiru Learn ✅</p>',
+  });
+  res.json({ configured: true, ...result });
 });
 
 if (process.env.NODE_ENV === 'production') {
