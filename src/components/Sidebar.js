@@ -8,12 +8,12 @@ export default function Sidebar({ user, navItems, activeView, setActiveView, onL
       <div className="sidebar-logo">
         <OkiruLogo size={36} className="sidebar-logo-img" />
         <div className="sidebar-logo-text">
-          <span className="sidebar-logo-name">Okiru LMS</span>
+          <span className="sidebar-logo-name">Okiru Training</span>
           <span className="sidebar-logo-sub">{user.role === 'admin' ? 'Admin Portal' : 'Learning Portal'}</span>
         </div>
       </div>
       <nav className="sidebar-nav">
-        <p className="nav-section-label">{user.role === 'admin' ? 'Admin' : 'Learning'}</p>
+        <p className="nav-section-label">{user.role === 'admin' ? 'Administration' : 'My Learning'}</p>
         {navItems.map(item => (
           <button
             key={item.id}

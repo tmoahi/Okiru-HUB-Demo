@@ -44,11 +44,24 @@ export default function LearnerPortal({ user, enrollments, progress, quizScores,
       </section>
 
       {enrolled.length === 0 && (
-        <div className="portal-empty">
-          <p className="portal-empty-icon">📚</p>
-          <h3>Start your learning journey</h3>
-          <p>Explore Okiru's B-BBEE, ESG, AI, and Compliance courses.</p>
-          <button className="btn btn-primary" onClick={() => navigateTo('catalogue')}>Browse Courses</button>
+        <div className="portal-onboarding">
+          <div className="onboarding-glow" />
+          <div className="onboarding-content">
+            <div className="onboarding-icon">🎓</div>
+            <h3 className="onboarding-title">Welcome to Okiru Training, {user.name.split(' ')[0]}!</h3>
+            <p className="onboarding-sub">
+              You've been given access to Okiru's professional AI &amp; compliance learning platform.
+              Browse the catalogue and enrol in any course to get started.
+            </p>
+            <div className="onboarding-features">
+              <div className="ob-feature"><span className="ob-feature-icon">📚</span><span>Self-paced courses</span></div>
+              <div className="ob-feature"><span className="ob-feature-icon">🏆</span><span>Certificates on completion</span></div>
+              <div className="ob-feature"><span className="ob-feature-icon">⚡</span><span>Practical AI skills</span></div>
+            </div>
+            <button className="btn btn-primary ob-cta" onClick={() => navigateTo('catalogue')}>
+              Explore courses →
+            </button>
+          </div>
         </div>
       )}
 

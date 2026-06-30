@@ -48,6 +48,13 @@ export default function App() {
 
   if (!user) return <Login onLogin={handleLogin} />;
 
+  // Learners must never reach admin-only views
+  const ADMIN_VIEWS = ['admin'];
+  if (user.role !== 'admin' && ADMIN_VIEWS.includes(view)) {
+    setView('portal');
+    return null;
+  }
+
   const ctx = { user, enrollments, progress, quizScores, enroll, markLessonComplete, saveQuizScore, navigateTo };
 
   const learnerNav = [
