@@ -513,6 +513,15 @@ app.post('/api/auth/reset-password', async (req, res) => {
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 
+app.get('/api/debug', async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT id, name, email, role FROM learners');
+    res.json({ version: 'db-v2', dbConnected: true, learners: rows });
+  } catch (err) {
+    res.json({ version: 'db-v2', dbConnected: false, error: err.message });
+  }
+});
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'build')));
   app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'build', 'index.html')));
