@@ -426,6 +426,7 @@ app.post('/api/admin/invite', async (req, res) => {
       data: { id, name: name.trim(), email: email.trim().toLowerCase(), username, company: company || '', password, loginUrl: APP_URL, emailSent: emailResult.sent, emailNote: emailResult.sent ? null : emailResult.reason },
     });
   } catch (err) {
+    console.error('[invite] FAILED:', err.message, err.stack);
     res.status(500).json({ success: false, error: err.message });
   }
 });
