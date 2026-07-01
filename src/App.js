@@ -10,29 +10,15 @@ import LessonPlayer from './components/LessonPlayer';
 import Certificate from './components/Certificate';
 import AdminDashboard from './components/AdminDashboard';
 
-const STORAGE_KEY = 'okiru_lms';
-
-function loadState() {
-  try { const s = localStorage.getItem(STORAGE_KEY); return s ? JSON.parse(s) : {}; }
-  catch { return {}; }
-}
-function saveState(s) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch {}
-}
-
 export default function App() {
   const [user, setUser]                     = useState(null);
   const [view, setView]                     = useState('portal');
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedModule, setSelectedModule] = useState(null);
 
-  const [enrollments, setEnrollments] = useState(() => new Set(loadState().enrollments || []));
-  const [progress,    setProgress]    = useState(() => loadState().progress    || {});
-  const [quizScores,  setQuizScores]  = useState(() => loadState().quizScores  || {});
-
-  useEffect(() => {
-    saveState({ enrollments: [...enrollments], progress, quizScores });
-  }, [enrollments, progress, quizScores]);
+  const [enrollments, setEnrollments] = useState(() => new Set());
+  const [progress,    setProgress]    = useState({});
+  const [quizScores,  setQuizScores]  = useState({});
 
   // Heartbeat — reports every 30s while a learner is active
   useEffect(() => {
@@ -54,12 +40,62 @@ export default function App() {
     if (moduleId !== null) setSelectedModule(moduleId);
   };
 
-  const enroll             = (courseId) => setEnrollments(prev => new Set([...prev, courseId]));
-  const markLessonComplete = (lessonId) => setProgress(prev => ({ ...prev, [lessonId]: true }));
-  const saveQuizScore      = (quizId, scoreObj) => setQuizScores(prev => ({ ...prev, [quizId]: scoreObj }));
+  const enroll = async (courseId) => {
+    setEnrollments(prev => new Set([...prev, courseId]));
+    if (user) {
+      fetch('/api/learner/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, courseId }),
+      }).catch(() => {});
+    }
+  };
 
-  const handleLogin  = (userData) => { setUser(userData); setView(userData.role === 'admin' ? 'admin' : 'portal'); };
-  const handleLogout = () => { setUser(null); setView('portal'); };
+  const markLessonComplete = async (lessonId) => {
+    setProgress(prev => ({ ...prev, [lessonId]: true }));
+    if (user) {
+      fetch('/api/learner/lesson-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, lessonId }),
+      }).catch(() => {});
+    }
+  };
+
+  const saveQuizScore = async (quizId, scoreObj) => {
+    setQuizScores(prev => ({ ...prev, [quizId]: scoreObj }));
+    if (user) {
+      fetch('/api/learner/quiz-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, quizId, scoreData: scoreObj }),
+      }).catch(() => {});
+    }
+  };
+
+  const handleLogin = async (userData) => {
+    setUser(userData);
+    setView(userData.role === 'admin' ? 'admin' : 'portal');
+    if (userData.role !== 'admin') {
+      try {
+        const res  = await fetch(`/api/learner/progress/${userData.id}`);
+        const json = await res.json();
+        if (json.success) {
+          setEnrollments(new Set(json.data.enrollments || []));
+          setProgress(json.data.progress || {});
+          setQuizScores(json.data.quizScores || {});
+        }
+      } catch {}
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setView('portal');
+    setEnrollments(new Set());
+    setProgress({});
+    setQuizScores({});
+  };
 
   // Handle password reset links: ?reset=TOKEN
   const resetToken = new URLSearchParams(window.location.search).get('reset');
