@@ -77,7 +77,7 @@ function inviteEmailHtml({ name, username, password, loginUrl }) {
       <td style="background:linear-gradient(135deg,#06CDE1 0%,#6A3FBF 50%,#BA0DA7 100%);padding:28px 36px;">
         <table cellpadding="0" cellspacing="0"><tr>
           <td style="padding-right:14px;vertical-align:middle;">
-            <img src="https://okiru-hub-demo-production-eb58.up.railway.app/okiru-symbol.png" alt="Okiru" width="60" height="60" style="display:block;border-radius:50%;">
+            <img src="https://okiru-hub-demo-production-eb58.up.railway.app/okiru-logo.png" alt="Okiru" width="60" height="60" style="display:block;border-radius:50%;">
           </td>
           <td style="vertical-align:middle;">
             <span style="font-size:26px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">LEARN</span>
@@ -162,14 +162,8 @@ function inviteEmailHtml({ name, username, password, loginUrl }) {
       <td style="background:#0d0d1a;padding:22px 36px;border-top:3px solid transparent;background-clip:padding-box;">
         <table cellpadding="0" cellspacing="0" style="width:100%;"><tr>
           <td style="vertical-align:middle;">
-            <table cellpadding="0" cellspacing="0"><tr>
-              <td style="padding-right:10px;vertical-align:middle;">
-                <img src="https://okiru-hub-demo-production-eb58.up.railway.app/okiru-symbol.png" alt="Okiru" width="36" height="36" style="display:block;border-radius:50%;">
-              </td>
-              <td style="vertical-align:middle;">
-                <div style="font-size:12px;color:#64748b;line-height:1.6;">Empowering people.<br>Transforming businesses.</div>
-              </td>
-            </tr></table>
+            <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">OKIRU</div>
+            <div style="font-size:12px;color:#64748b;margin-top:4px;line-height:1.6;">Empowering people.<br>Transforming businesses.</div>
           </td>
           <td style="text-align:right;vertical-align:middle;">
             <span style="display:inline-block;width:32px;height:32px;border-radius:50%;border:1px solid #2a2a42;text-align:center;line-height:32px;font-size:12px;font-weight:700;color:#94a3b8;margin-left:6px;">in</span>
@@ -275,14 +269,8 @@ function resetEmailHtml({ name, resetUrl }) {
       <td style="background:#0d0d1a;padding:22px 36px;">
         <table cellpadding="0" cellspacing="0" style="width:100%;"><tr>
           <td style="vertical-align:middle;">
-            <table cellpadding="0" cellspacing="0"><tr>
-              <td style="padding-right:10px;vertical-align:middle;">
-                <img src="https://okiru-hub-demo-production-eb58.up.railway.app/okiru-symbol.png" alt="Okiru" width="36" height="36" style="display:block;border-radius:50%;">
-              </td>
-              <td style="vertical-align:middle;">
-                <div style="font-size:12px;color:#64748b;line-height:1.6;">Empowering people.<br>Transforming businesses.</div>
-              </td>
-            </tr></table>
+            <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">OKIRU</div>
+            <div style="font-size:12px;color:#64748b;margin-top:4px;line-height:1.6;">Empowering people.<br>Transforming businesses.</div>
           </td>
           <td style="text-align:right;vertical-align:middle;">
             <span style="display:inline-block;width:32px;height:32px;border-radius:50%;border:1px solid #2a2a42;text-align:center;line-height:32px;font-size:12px;font-weight:700;color:#94a3b8;margin-left:6px;">in</span>
