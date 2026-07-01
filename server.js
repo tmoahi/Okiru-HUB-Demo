@@ -80,7 +80,7 @@ function inviteEmailHtml({ name, username, password, loginUrl }) {
             <img src="https://okiru-hub-demo-production-eb58.up.railway.app/okiru-logo.png" alt="Okiru" width="60" height="60" style="display:block;border-radius:50%;">
           </td>
           <td style="vertical-align:middle;">
-            <span style="font-size:26px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">OKIRU LEARN</span>
+            <span style="font-size:26px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">LEARN</span>
           </td>
         </tr></table>
       </td>
@@ -215,7 +215,7 @@ function resetEmailHtml({ name, resetUrl }) {
             <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.4);text-align:center;line-height:52px;font-size:22px;font-weight:900;color:#fff;display:inline-block;">O</div>
           </td>
           <td style="vertical-align:middle;">
-            <span style="font-size:26px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">OKIRU LEARN</span>
+            <span style="font-size:26px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">LEARN</span>
           </td>
         </tr></table>
       </td>
