@@ -19,22 +19,26 @@ const pool = new Pool({
 });
 
 async function initDB() {
-  await pool.query(`
-    ALTER TABLE learners
-      ADD COLUMN IF NOT EXISTS id               TEXT,
-      ADD COLUMN IF NOT EXISTS name             TEXT,
-      ADD COLUMN IF NOT EXISTS email            TEXT,
-      ADD COLUMN IF NOT EXISTS username         TEXT,
-      ADD COLUMN IF NOT EXISTS company          TEXT DEFAULT '',
-      ADD COLUMN IF NOT EXISTS role             TEXT DEFAULT 'learner',
-      ADD COLUMN IF NOT EXISTS avatar           TEXT DEFAULT '',
-      ADD COLUMN IF NOT EXISTS password         TEXT,
-      ADD COLUMN IF NOT EXISTS status           TEXT DEFAULT 'invited',
-      ADD COLUMN IF NOT EXISTS last_login       TIMESTAMPTZ,
-      ADD COLUMN IF NOT EXISTS last_seen        TIMESTAMPTZ,
-      ADD COLUMN IF NOT EXISTS total_time_secs  INTEGER DEFAULT 0,
-      ADD COLUMN IF NOT EXISTS invited_at       TIMESTAMPTZ DEFAULT NOW();
-  `);
+  // Add columns to the existing learners table
+  const cols = [
+    `ADD COLUMN IF NOT EXISTS name             TEXT`,
+    `ADD COLUMN IF NOT EXISTS email            TEXT`,
+    `ADD COLUMN IF NOT EXISTS username         TEXT`,
+    `ADD COLUMN IF NOT EXISTS company          TEXT DEFAULT ''`,
+    `ADD COLUMN IF NOT EXISTS role             TEXT DEFAULT 'learner'`,
+    `ADD COLUMN IF NOT EXISTS avatar           TEXT DEFAULT ''`,
+    `ADD COLUMN IF NOT EXISTS password         TEXT`,
+    `ADD COLUMN IF NOT EXISTS status           TEXT DEFAULT 'invited'`,
+    `ADD COLUMN IF NOT EXISTS last_login       TIMESTAMPTZ`,
+    `ADD COLUMN IF NOT EXISTS last_seen        TIMESTAMPTZ`,
+    `ADD COLUMN IF NOT EXISTS total_time_secs  INTEGER DEFAULT 0`,
+    `ADD COLUMN IF NOT EXISTS invited_at       TIMESTAMPTZ DEFAULT NOW()`,
+  ];
+  for (const col of cols) {
+    await pool.query(`ALTER TABLE learners ${col}`).catch(() => {});
+  }
+
+  // Make id the primary key if not already
   await pool.query(`
     DO $$ BEGIN
       IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'learners_pkey') THEN
@@ -43,20 +47,20 @@ async function initDB() {
     END $$;
   `).catch(() => {});
 
+  // Other tables
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS enrollments (
       user_id     TEXT NOT NULL,
       course_id   TEXT NOT NULL,
       enrolled_at TIMESTAMPTZ DEFAULT NOW(),
       PRIMARY KEY (user_id, course_id)
     );
-
     CREATE TABLE IF NOT EXISTS lesson_progress (
       user_id      TEXT NOT NULL,
       lesson_id    TEXT NOT NULL,
       completed_at TIMESTAMPTZ DEFAULT NOW(),
       PRIMARY KEY (user_id, lesson_id)
     );
-
     CREATE TABLE IF NOT EXISTS quiz_scores (
       user_id    TEXT NOT NULL,
       quiz_id    TEXT NOT NULL,
@@ -64,7 +68,6 @@ async function initDB() {
       taken_at   TIMESTAMPTZ DEFAULT NOW(),
       PRIMARY KEY (user_id, quiz_id)
     );
-
     CREATE TABLE IF NOT EXISTS reset_tokens (
       token      TEXT PRIMARY KEY,
       user_id    TEXT NOT NULL,
