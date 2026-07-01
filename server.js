@@ -16,6 +16,8 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const APP_URL        = process.env.APP_URL || 'https://okiru-hub-demo-production-eb58.up.railway.app';
 const FROM_EMAIL     = 'Okiru Learn <onboarding@resend.dev>';
 
+const REPLY_TO = 'tmoahi@okiru.co.za';
+
 async function sendEmail({ to, subject, html }) {
   if (!RESEND_API_KEY) {
     console.warn('[email] RESEND_API_KEY not set — email skipped');
@@ -23,7 +25,13 @@ async function sendEmail({ to, subject, html }) {
   }
   try {
     const resend = new Resend(RESEND_API_KEY);
-    const { data, error } = await resend.emails.send({ from: FROM_EMAIL, to, subject, html });
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject,
+      html,
+      replyTo: REPLY_TO,
+    });
     if (error) {
       console.error('[email] Resend error:', error.message);
       return { sent: false, reason: error.message };
@@ -40,78 +48,247 @@ async function sendEmail({ to, subject, html }) {
 
 function inviteEmailHtml({ name, username, password, loginUrl }) {
   return `<!DOCTYPE html>
-<html><head><meta charset="utf-8"><style>
-  body { margin:0; padding:0; background:#0a0a0f; font-family: 'Segoe UI', Arial, sans-serif; color:#e2e8f0; }
-  .wrap { max-width:560px; margin:40px auto; background:#12121a; border:1px solid #1e2030; border-radius:16px; overflow:hidden; }
-  .header { background: linear-gradient(135deg, #06CDE1 0%, #BA0DA7 100%); padding:32px 40px; }
-  .header h1 { margin:0; font-size:24px; font-weight:700; color:#fff; }
-  .header p  { margin:6px 0 0; font-size:13px; color:rgba(255,255,255,0.8); }
-  .body { padding:36px 40px; }
-  .body h2 { font-size:18px; font-weight:700; margin:0 0 12px; color:#f1f5f9; }
-  .body p  { font-size:14px; line-height:1.6; color:#94a3b8; margin:0 0 20px; }
-  .creds { background:#0a0a0f; border:1px solid #1e2030; border-radius:10px; overflow:hidden; margin:24px 0; }
-  .cred-row { display:flex; align-items:center; padding:12px 18px; border-bottom:1px solid #1e2030; }
-  .cred-row:last-child { border-bottom:none; }
-  .cred-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:#64748b; width:120px; flex-shrink:0; }
-  .cred-value { font-size:14px; color:#f1f5f9; font-weight:500; }
-  .cred-pw    { font-family:monospace; color:#06CDE1; font-size:16px; font-weight:700; letter-spacing:0.05em; }
-  .btn { display:inline-block; background:linear-gradient(135deg,#06CDE1,#BA0DA7); color:#fff; text-decoration:none; font-weight:700; font-size:14px; padding:13px 28px; border-radius:8px; margin-top:8px; }
-  .note { font-size:12px; color:#64748b; margin-top:24px; padding-top:20px; border-top:1px solid #1e2030; line-height:1.6; }
-  .footer { background:#0a0a0f; padding:20px 40px; font-size:11px; color:#475569; text-align:center; border-top:1px solid #1e2030; }
-</style></head><body>
-<div class="wrap">
-  <div class="header">
-    <h1>Okiru Learn</h1>
-    <p>Professional Learning Platform</p>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Welcome to Okiru Learn</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f4f8;font-family:'Segoe UI',Arial,sans-serif;">
+
+  <!-- Pre-header -->
+  <div style="text-align:center;padding:14px 20px;font-size:13px;color:#888;background:#fff;border-bottom:1px solid #e8e8ee;">
+    Welcome to Okiru Learn – Your Learning Journey Starts Here.
   </div>
-  <div class="body">
-    <h2>You've been invited, ${name}!</h2>
-    <p>Your administrator has set up an Okiru Learn account for you. Use the credentials below to sign in and start your learning journey.</p>
-    <div class="creds">
-      <div class="cred-row"><span class="cred-label">Username</span><span class="cred-value">${username}</span></div>
-      <div class="cred-row"><span class="cred-label">Password</span><span class="cred-value cred-pw">${password}</span></div>
-      <div class="cred-row"><span class="cred-label">Login URL</span><span class="cred-value">${loginUrl}</span></div>
-    </div>
-    <a href="${loginUrl}" class="btn">Sign in to Okiru Learn →</a>
-    <p class="note">
-      This is your temporary password — you can change it anytime via the "Forgot password?" link on the login page.
-      If you believe you received this email in error, please ignore it.
-    </p>
+
+  <!-- Tagline row -->
+  <div style="background:#fff;padding:12px 40px 12px;text-align:right;border-bottom:1px solid #e8e8ee;">
+    <span style="font-size:13px;font-weight:600;color:#1a1a2e;">Learn. Grow. Transform.</span><br>
+    <span style="font-size:13px;"><span style="color:#06CDE1;font-weight:600;">Anywhere.</span>&nbsp;<span style="color:#BA0DA7;font-weight:600;">Anytime.</span></span>
   </div>
-  <div class="footer">© Okiru Learn · okiru.co.za</div>
-</div>
-</body></html>`;
+
+  <!-- Outer wrapper -->
+  <table cellpadding="0" cellspacing="0" style="width:100%;background:#f4f4f8;">
+  <tr><td style="padding:24px 16px;">
+  <table cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+
+    <!-- ── Gradient header ── -->
+    <tr>
+      <td style="background:linear-gradient(135deg,#06CDE1 0%,#6A3FBF 50%,#BA0DA7 100%);padding:28px 36px;">
+        <table cellpadding="0" cellspacing="0"><tr>
+          <td style="padding-right:16px;vertical-align:middle;">
+            <!-- Logo circle -->
+            <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.4);text-align:center;line-height:52px;font-size:22px;font-weight:900;color:#fff;display:inline-block;">O</div>
+          </td>
+          <td style="vertical-align:middle;">
+            <span style="font-size:26px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">OKIRU LEARN</span>
+          </td>
+        </tr></table>
+      </td>
+    </tr>
+
+    <!-- ── Dark body ── -->
+    <tr>
+      <td style="background:#13131f;padding:36px 36px 28px;">
+
+        <!-- Icon + heading -->
+        <table cellpadding="0" cellspacing="0" style="margin-bottom:20px;"><tr>
+          <td style="padding-right:16px;vertical-align:middle;">
+            <div style="width:52px;height:52px;border-radius:50%;border:2px solid #6A3FBF;background:rgba(106,63,191,0.18);text-align:center;line-height:52px;font-size:22px;display:inline-block;">&#128100;</div>
+          </td>
+          <td style="vertical-align:middle;">
+            <h2 style="margin:0;font-size:22px;font-weight:800;color:#fff;">You've been invited!</h2>
+          </td>
+        </tr></table>
+
+        <p style="margin:0 0 24px;font-size:14px;color:#94a3b8;line-height:1.75;">
+          Your administrator has set up an Okiru Learn account for you.<br>
+          Use the credentials below to sign in and start your learning journey.
+        </p>
+
+        <!-- Credentials table -->
+        <table cellpadding="0" cellspacing="0" style="width:100%;border:1px solid #2a2a42;border-radius:10px;overflow:hidden;margin-bottom:28px;">
+          <tr>
+            <td style="padding:13px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748b;background:#0d0d1a;width:140px;border-bottom:1px solid #2a2a42;">INVITED USER</td>
+            <td style="padding:13px 18px;font-size:14px;color:#e2e8f0;background:#0d0d1a;border-bottom:1px solid #2a2a42;border-left:1px solid #2a2a42;">${name}</td>
+          </tr>
+          <tr>
+            <td style="padding:13px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748b;background:#13131f;border-bottom:1px solid #2a2a42;">USERNAME</td>
+            <td style="padding:13px 18px;font-size:14px;color:#e2e8f0;background:#13131f;border-bottom:1px solid #2a2a42;border-left:1px solid #2a2a42;">${username}</td>
+          </tr>
+          <tr>
+            <td style="padding:13px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748b;background:#0d0d1a;border-bottom:1px solid #2a2a42;">PASSWORD</td>
+            <td style="padding:13px 18px;font-family:monospace;font-size:16px;font-weight:700;color:#06CDE1;background:#0d0d1a;border-bottom:1px solid #2a2a42;border-left:1px solid #2a2a42;letter-spacing:0.05em;">${password}</td>
+          </tr>
+          <tr>
+            <td style="padding:13px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748b;background:#13131f;">LOGIN URL</td>
+            <td style="padding:13px 18px;font-size:13px;color:#94a3b8;background:#13131f;border-left:1px solid #2a2a42;">${loginUrl}</td>
+          </tr>
+        </table>
+
+        <!-- CTA button -->
+        <div style="text-align:center;margin-bottom:28px;">
+          <a href="${loginUrl}" style="display:inline-block;background:linear-gradient(135deg,#06CDE1 0%,#BA0DA7 100%);color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:15px 48px;border-radius:8px;">Sign in to Okiru Learn &rarr;</a>
+        </div>
+
+        <!-- Note -->
+        <p style="font-size:12px;color:#64748b;text-align:center;line-height:1.8;margin:0 0 28px;">
+          This is your temporary password &mdash; you can change it anytime via the<br>
+          &ldquo;Forgot password?&rdquo; link on the login page. If you believe you received<br>
+          this email in error, please ignore it.
+        </p>
+
+        <!-- Divider -->
+        <div style="border-top:1px solid #2a2a42;margin:0 0 24px;"></div>
+
+        <!-- Need help -->
+        <table cellpadding="0" cellspacing="0"><tr>
+          <td style="padding-right:16px;vertical-align:top;">
+            <div style="width:48px;height:48px;border-radius:50%;border:2px solid #6A3FBF;background:rgba(106,63,191,0.18);text-align:center;line-height:48px;font-size:20px;font-weight:800;color:#9B6FE8;display:inline-block;">?</div>
+          </td>
+          <td style="vertical-align:middle;">
+            <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:#fff;">Need help?</p>
+            <p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.7;">
+              If you have any questions or need assistance,<br>
+              contact our support team at <a href="mailto:tmoahi@okiru.co.za" style="color:#06CDE1;text-decoration:none;">tmoahi@okiru.co.za</a>
+            </p>
+          </td>
+        </tr></table>
+
+      </td>
+    </tr>
+
+    <!-- ── Dark footer ── -->
+    <tr>
+      <td style="background:#0d0d1a;padding:22px 36px;border-top:3px solid transparent;background-clip:padding-box;">
+        <table cellpadding="0" cellspacing="0" style="width:100%;"><tr>
+          <td style="vertical-align:middle;">
+            <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">OKIRU</div>
+            <div style="font-size:12px;color:#64748b;margin-top:4px;line-height:1.6;">Empowering people.<br>Transforming businesses.</div>
+          </td>
+          <td style="text-align:right;vertical-align:middle;">
+            <span style="display:inline-block;width:32px;height:32px;border-radius:50%;border:1px solid #2a2a42;text-align:center;line-height:32px;font-size:12px;font-weight:700;color:#94a3b8;margin-left:6px;">in</span>
+            <span style="display:inline-block;width:32px;height:32px;border-radius:50%;border:1px solid #2a2a42;text-align:center;line-height:32px;font-size:14px;color:#94a3b8;margin-left:6px;">&#127760;</span>
+            <span style="display:inline-block;width:32px;height:32px;border-radius:50%;border:1px solid #2a2a42;text-align:center;line-height:32px;font-size:13px;font-weight:700;color:#94a3b8;margin-left:6px;">f</span>
+          </td>
+        </tr></table>
+      </td>
+    </tr>
+
+  </table>
+
+  <!-- Copyright -->
+  <p style="text-align:center;font-size:11px;color:#aaa;margin:16px 0 0;">&copy; 2026 Okiru Consulting (Pty) Ltd. All rights reserved.</p>
+
+  </td></tr>
+  </table>
+
+</body>
+</html>`;
 }
 
 function resetEmailHtml({ name, resetUrl }) {
   return `<!DOCTYPE html>
-<html><head><meta charset="utf-8"><style>
-  body { margin:0; padding:0; background:#0a0a0f; font-family: 'Segoe UI', Arial, sans-serif; color:#e2e8f0; }
-  .wrap { max-width:560px; margin:40px auto; background:#12121a; border:1px solid #1e2030; border-radius:16px; overflow:hidden; }
-  .header { background: linear-gradient(135deg, #06CDE1 0%, #BA0DA7 100%); padding:32px 40px; }
-  .header h1 { margin:0; font-size:24px; font-weight:700; color:#fff; }
-  .header p  { margin:6px 0 0; font-size:13px; color:rgba(255,255,255,0.8); }
-  .body { padding:36px 40px; }
-  .body h2 { font-size:18px; font-weight:700; margin:0 0 12px; color:#f1f5f9; }
-  .body p  { font-size:14px; line-height:1.6; color:#94a3b8; margin:0 0 20px; }
-  .btn { display:inline-block; background:linear-gradient(135deg,#06CDE1,#BA0DA7); color:#fff; text-decoration:none; font-weight:700; font-size:14px; padding:13px 28px; border-radius:8px; }
-  .note { font-size:12px; color:#64748b; margin-top:24px; padding-top:20px; border-top:1px solid #1e2030; line-height:1.6; }
-  .footer { background:#0a0a0f; padding:20px 40px; font-size:11px; color:#475569; text-align:center; border-top:1px solid #1e2030; }
-</style></head><body>
-<div class="wrap">
-  <div class="header">
-    <h1>Okiru Learn</h1>
-    <p>Professional Learning Platform</p>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reset your Okiru Learn password</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f4f8;font-family:'Segoe UI',Arial,sans-serif;">
+
+  <div style="text-align:center;padding:14px 20px;font-size:13px;color:#888;background:#fff;border-bottom:1px solid #e8e8ee;">
+    Okiru Learn &mdash; Password Reset Request
   </div>
-  <div class="body">
-    <h2>Password reset request</h2>
-    <p>Hi ${name}, we received a request to reset your Okiru Learn password. Click the button below — this link expires in <strong>1 hour</strong>.</p>
-    <a href="${resetUrl}" class="btn">Reset my password →</a>
-    <p class="note">If you didn't request a password reset, you can safely ignore this email. Your password will not change.</p>
+  <div style="background:#fff;padding:12px 40px 12px;text-align:right;border-bottom:1px solid #e8e8ee;">
+    <span style="font-size:13px;font-weight:600;color:#1a1a2e;">Learn. Grow. Transform.</span><br>
+    <span style="font-size:13px;"><span style="color:#06CDE1;font-weight:600;">Anywhere.</span>&nbsp;<span style="color:#BA0DA7;font-weight:600;">Anytime.</span></span>
   </div>
-  <div class="footer">© Okiru Learn · okiru.co.za</div>
-</div>
-</body></html>`;
+
+  <table cellpadding="0" cellspacing="0" style="width:100%;background:#f4f4f8;">
+  <tr><td style="padding:24px 16px;">
+  <table cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+
+    <tr>
+      <td style="background:linear-gradient(135deg,#06CDE1 0%,#6A3FBF 50%,#BA0DA7 100%);padding:28px 36px;">
+        <table cellpadding="0" cellspacing="0"><tr>
+          <td style="padding-right:16px;vertical-align:middle;">
+            <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.4);text-align:center;line-height:52px;font-size:22px;font-weight:900;color:#fff;display:inline-block;">O</div>
+          </td>
+          <td style="vertical-align:middle;">
+            <span style="font-size:26px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">OKIRU LEARN</span>
+          </td>
+        </tr></table>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="background:#13131f;padding:36px 36px 28px;">
+
+        <table cellpadding="0" cellspacing="0" style="margin-bottom:20px;"><tr>
+          <td style="padding-right:16px;vertical-align:middle;">
+            <div style="width:52px;height:52px;border-radius:50%;border:2px solid #6A3FBF;background:rgba(106,63,191,0.18);text-align:center;line-height:52px;font-size:22px;display:inline-block;">&#128274;</div>
+          </td>
+          <td style="vertical-align:middle;">
+            <h2 style="margin:0;font-size:22px;font-weight:800;color:#fff;">Password reset request</h2>
+          </td>
+        </tr></table>
+
+        <p style="margin:0 0 28px;font-size:14px;color:#94a3b8;line-height:1.75;">
+          Hi ${name}, we received a request to reset your Okiru Learn password.<br>
+          Click the button below &mdash; this link expires in <strong style="color:#e2e8f0;">1 hour</strong>.
+        </p>
+
+        <div style="text-align:center;margin-bottom:28px;">
+          <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#06CDE1 0%,#BA0DA7 100%);color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:15px 48px;border-radius:8px;">Reset my password &rarr;</a>
+        </div>
+
+        <p style="font-size:12px;color:#64748b;text-align:center;line-height:1.8;margin:0 0 28px;">
+          If you didn&rsquo;t request a password reset, you can safely ignore this email.<br>
+          Your password will not change.
+        </p>
+
+        <div style="border-top:1px solid #2a2a42;margin:0 0 24px;"></div>
+
+        <table cellpadding="0" cellspacing="0"><tr>
+          <td style="padding-right:16px;vertical-align:top;">
+            <div style="width:48px;height:48px;border-radius:50%;border:2px solid #6A3FBF;background:rgba(106,63,191,0.18);text-align:center;line-height:48px;font-size:20px;font-weight:800;color:#9B6FE8;display:inline-block;">?</div>
+          </td>
+          <td style="vertical-align:middle;">
+            <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:#fff;">Need help?</p>
+            <p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.7;">
+              If you have any questions or need assistance,<br>
+              contact our support team at <a href="mailto:tmoahi@okiru.co.za" style="color:#06CDE1;text-decoration:none;">tmoahi@okiru.co.za</a>
+            </p>
+          </td>
+        </tr></table>
+
+      </td>
+    </tr>
+
+    <tr>
+      <td style="background:#0d0d1a;padding:22px 36px;">
+        <table cellpadding="0" cellspacing="0" style="width:100%;"><tr>
+          <td style="vertical-align:middle;">
+            <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">OKIRU</div>
+            <div style="font-size:12px;color:#64748b;margin-top:4px;line-height:1.6;">Empowering people.<br>Transforming businesses.</div>
+          </td>
+          <td style="text-align:right;vertical-align:middle;">
+            <span style="display:inline-block;width:32px;height:32px;border-radius:50%;border:1px solid #2a2a42;text-align:center;line-height:32px;font-size:12px;font-weight:700;color:#94a3b8;margin-left:6px;">in</span>
+            <span style="display:inline-block;width:32px;height:32px;border-radius:50%;border:1px solid #2a2a42;text-align:center;line-height:32px;font-size:14px;color:#94a3b8;margin-left:6px;">&#127760;</span>
+            <span style="display:inline-block;width:32px;height:32px;border-radius:50%;border:1px solid #2a2a42;text-align:center;line-height:32px;font-size:13px;font-weight:700;color:#94a3b8;margin-left:6px;">f</span>
+          </td>
+        </tr></table>
+      </td>
+    </tr>
+
+  </table>
+  <p style="text-align:center;font-size:11px;color:#aaa;margin:16px 0 0;">&copy; 2026 Okiru Consulting (Pty) Ltd. All rights reserved.</p>
+  </td></tr>
+  </table>
+
+</body>
+</html>`;
 }
 
 // ─── Course Catalogue ─────────────────────────────────────────────────────────
