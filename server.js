@@ -76,9 +76,8 @@ function inviteEmailHtml({ name, username, password, loginUrl }) {
     <tr>
       <td style="background:linear-gradient(135deg,#06CDE1 0%,#6A3FBF 50%,#BA0DA7 100%);padding:28px 36px;">
         <table cellpadding="0" cellspacing="0"><tr>
-          <td style="padding-right:16px;vertical-align:middle;">
-            <!-- Logo circle -->
-            <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.4);text-align:center;line-height:52px;font-size:22px;font-weight:900;color:#fff;display:inline-block;">O</div>
+          <td style="padding-right:14px;vertical-align:middle;">
+            <img src="https://okiru-hub-demo-production-eb58.up.railway.app/okiru-logo.png" alt="Okiru" width="60" height="60" style="display:block;border-radius:50%;">
           </td>
           <td style="vertical-align:middle;">
             <span style="font-size:26px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;">OKIRU LEARN</span>
