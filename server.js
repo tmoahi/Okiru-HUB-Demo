@@ -526,8 +526,21 @@ app.get('/api/debug', async (req, res) => {
 });
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'build')));
-  app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'build', 'index.html')));
+  // Static assets (JS/CSS are content-hashed by CRA — cache aggressively)
+  app.use(express.static(path.join(__dirname, 'build'), {
+    maxAge: '1y',
+    etag: false,
+    setHeaders(res, filePath) {
+      // Never cache index.html so the browser always fetches fresh hashed asset URLs
+      if (filePath.endsWith('index.html')) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      }
+    },
+  }));
+  app.get('*', (req, res) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
 }
 
 app.listen(PORT, () => console.log(`Okiru Learn running on port ${PORT}`));
