@@ -15,10 +15,18 @@ export default function App() {
   const [view, setView]                     = useState('portal');
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedModule, setSelectedModule] = useState(null);
+  const [theme, setTheme]                   = useState(() => localStorage.getItem('okiru_theme') || 'dark');
 
   const [enrollments, setEnrollments] = useState(() => new Set());
   const [progress,    setProgress]    = useState({});
   const [quizScores,  setQuizScores]  = useState({});
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('okiru_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
   // Heartbeat — reports every 30s while a learner is active
   useEffect(() => {
@@ -142,7 +150,7 @@ export default function App() {
         onLogout={handleLogout}
       />
       <div className="app-main">
-        <Header user={user} view={view} />
+        <Header user={user} view={view} theme={theme} onToggleTheme={toggleTheme} />
         <main className="app-content">
           {view === 'portal'       && user.role !== 'admin' && <LearnerPortal {...ctx} />}
           {view === 'catalogue'    && <CourseCatalogue {...ctx} />}

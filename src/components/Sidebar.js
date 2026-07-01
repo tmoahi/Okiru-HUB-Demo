@@ -6,11 +6,8 @@ export default function Sidebar({ user, navItems, activeView, setActiveView, onL
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <OkiruLogo size={36} className="sidebar-logo-img" />
-        <div className="sidebar-logo-text">
-          <span className="sidebar-logo-name">Okiru Learn</span>
-          <span className="sidebar-logo-sub">{user.role === 'admin' ? 'Admin Portal' : 'Learning Portal'}</span>
-        </div>
+        <OkiruLogo height={38} className="sidebar-logo-img" />
+        <span className="sidebar-logo-sub">{user.role === 'admin' ? 'Admin Portal' : 'Learning Portal'}</span>
       </div>
       <nav className="sidebar-nav">
         <p className="nav-section-label">{user.role === 'admin' ? 'Administration' : 'My Learning'}</p>

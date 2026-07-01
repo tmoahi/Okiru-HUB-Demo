@@ -24,18 +24,11 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  padding: 22px 20px 18px;
+  padding: 18px 20px 16px;
   border-bottom: 1px solid var(--border);
   position: relative;
 }
-.sidebar-logo-img { width: 36px; height: 36px; flex-shrink: 0; filter: drop-shadow(0 0 8px rgba(6,205,225,0.4)); }
-.sidebar-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
-.sidebar-logo-name {
-  font-size: 15px; font-weight: 700;
-  background: var(--okiru-gradient);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  letter-spacing: -0.3px;
-}
+.sidebar-logo-img { height: 38px; width: auto; flex-shrink: 0; }
 .sidebar-logo-sub { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; }
 .sidebar-nav { flex: 1; padding: 18px 10px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
 .nav-section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding: 0 10px; margin: 4px 0 10px; }

@@ -9,7 +9,7 @@ const VIEW_LABELS = {
   admin:        'Admin Dashboard',
 };
 
-export default function Header({ view }) {
+export default function Header({ view, theme, onToggleTheme }) {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -32,6 +32,9 @@ export default function Header({ view }) {
             {time.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}
           </span>
         </div>
+        <button className="theme-toggle" onClick={onToggleTheme} title="Toggle light/dark mode">
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
         <div className="header-badge">Live</div>
       </div>
     </header>
