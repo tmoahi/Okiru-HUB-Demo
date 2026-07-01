@@ -395,11 +395,14 @@ app.get('/api/admin/learners', async (req, res) => {
 });
 
 app.post('/api/admin/invite', async (req, res) => {
+  console.log('[invite] request received', req.body);
   const { name, email, company } = req.body;
   if (!name || !email) return res.status(400).json({ success: false, error: 'Name and email are required.' });
 
   try {
+    console.log('[invite] checking email exists...');
     const exists = await pool.query('SELECT id FROM learners WHERE email = $1', [email.toLowerCase().trim()]);
+    console.log('[invite] email check done, exists:', exists.rows.length);
     if (exists.rows.length) return res.status(409).json({ success: false, error: 'A user with this email already exists.' });
 
     const username = await generateUsername(name);
