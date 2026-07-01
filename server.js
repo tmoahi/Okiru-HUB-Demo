@@ -20,21 +20,28 @@ const pool = new Pool({
 
 async function initDB() {
   await pool.query(`
-    CREATE TABLE IF NOT EXISTS users (
-      id               TEXT PRIMARY KEY,
-      name             TEXT NOT NULL,
-      email            TEXT UNIQUE NOT NULL,
-      username         TEXT UNIQUE NOT NULL,
-      company          TEXT DEFAULT '',
-      role             TEXT NOT NULL DEFAULT 'learner',
-      avatar           TEXT DEFAULT '',
-      password         TEXT NOT NULL,
-      status           TEXT DEFAULT 'invited',
-      last_login       TIMESTAMPTZ,
-      last_seen        TIMESTAMPTZ,
-      total_time_secs  INTEGER DEFAULT 0,
-      invited_at       TIMESTAMPTZ DEFAULT NOW()
-    );
+    ALTER TABLE learners
+      ADD COLUMN IF NOT EXISTS id               TEXT,
+      ADD COLUMN IF NOT EXISTS name             TEXT,
+      ADD COLUMN IF NOT EXISTS email            TEXT,
+      ADD COLUMN IF NOT EXISTS username         TEXT,
+      ADD COLUMN IF NOT EXISTS company          TEXT DEFAULT '',
+      ADD COLUMN IF NOT EXISTS role             TEXT DEFAULT 'learner',
+      ADD COLUMN IF NOT EXISTS avatar           TEXT DEFAULT '',
+      ADD COLUMN IF NOT EXISTS password         TEXT,
+      ADD COLUMN IF NOT EXISTS status           TEXT DEFAULT 'invited',
+      ADD COLUMN IF NOT EXISTS last_login       TIMESTAMPTZ,
+      ADD COLUMN IF NOT EXISTS last_seen        TIMESTAMPTZ,
+      ADD COLUMN IF NOT EXISTS total_time_secs  INTEGER DEFAULT 0,
+      ADD COLUMN IF NOT EXISTS invited_at       TIMESTAMPTZ DEFAULT NOW();
+  `);
+  await pool.query(`
+    DO $$ BEGIN
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'learners_pkey') THEN
+        ALTER TABLE learners ADD PRIMARY KEY (id);
+      END IF;
+    END $$;
+  `).catch(() => {});
 
     CREATE TABLE IF NOT EXISTS enrollments (
       user_id     TEXT NOT NULL,
@@ -67,7 +74,7 @@ async function initDB() {
 
   // Seed admin if not present
   await pool.query(`
-    INSERT INTO users (id, name, email, username, company, role, avatar, password, status)
+    INSERT INTO learners (id, name, email, username, company, role, avatar, password, status)
     VALUES ('admin', 'Okiru Admin', 'admin@okiru.co.za', 'admin', 'Okiru', 'admin', 'OK', 'okiru2025', 'active')
     ON CONFLICT (id) DO NOTHING;
   `);
@@ -231,7 +238,7 @@ async function generateUsername(name) {
   let username  = base;
   let counter   = 2;
   while (true) {
-    const { rows } = await pool.query('SELECT id FROM users WHERE username = $1', [username]);
+    const { rows } = await pool.query('SELECT id FROM learners WHERE username = $1', [username]);
     if (rows.length === 0) break;
     username = base + counter++;
   }
@@ -343,7 +350,7 @@ app.post('/api/learner/heartbeat', async (req, res) => {
   const { userId, seconds } = req.body;
   try {
     await pool.query(
-      'UPDATE users SET total_time_secs = total_time_secs + $1, last_seen = NOW() WHERE id = $2',
+      'UPDATE learners SET total_time_secs = total_time_secs + $1, last_seen = NOW() WHERE id = $2',
       [seconds || 30, userId]
     );
     res.json({ success: true });
@@ -356,7 +363,7 @@ app.post('/api/learner/heartbeat', async (req, res) => {
 
 app.get('/api/admin/stats', async (req, res) => {
   try {
-    const { rows: learners } = await pool.query("SELECT * FROM users WHERE role = 'learner'");
+    const { rows: learners } = await pool.query("SELECT * FROM learners WHERE role = 'learner'");
     const active = learners.filter(u => u.status === 'active').length;
     res.json({
       success: true,
@@ -387,7 +394,7 @@ app.get('/api/admin/stats', async (req, res) => {
 
 app.get('/api/admin/learners', async (req, res) => {
   try {
-    const { rows } = await pool.query("SELECT * FROM users WHERE role = 'learner' ORDER BY invited_at DESC");
+    const { rows } = await pool.query("SELECT * FROM learners WHERE role = 'learner' ORDER BY invited_at DESC");
     res.json({ success: true, data: rows.map(safeUser) });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -399,7 +406,7 @@ app.post('/api/admin/invite', async (req, res) => {
   if (!name || !email) return res.status(400).json({ success: false, error: 'Name and email are required.' });
 
   try {
-    const exists = await pool.query('SELECT id FROM users WHERE email = $1', [email.toLowerCase().trim()]);
+    const exists = await pool.query('SELECT id FROM learners WHERE email = $1', [email.toLowerCase().trim()]);
     if (exists.rows.length) return res.status(409).json({ success: false, error: 'A user with this email already exists.' });
 
     const username = await generateUsername(name);
@@ -408,7 +415,7 @@ app.post('/api/admin/invite', async (req, res) => {
     const avatar   = name.trim().split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
     await pool.query(
-      `INSERT INTO users (id, name, email, username, company, role, avatar, password, status, invited_at)
+      `INSERT INTO learners (id, name, email, username, company, role, avatar, password, status, invited_at)
        VALUES ($1,$2,$3,$4,$5,'learner',$6,$7,'invited',NOW())`,
       [id, name.trim(), email.trim().toLowerCase(), username, company || '', avatar, password]
     );
@@ -430,7 +437,7 @@ app.post('/api/admin/invite', async (req, res) => {
 
 app.delete('/api/admin/learners/:id', async (req, res) => {
   try {
-    const { rowCount } = await pool.query("DELETE FROM users WHERE id = $1 AND role = 'learner'", [req.params.id]);
+    const { rowCount } = await pool.query("DELETE FROM learners WHERE id = $1 AND role = 'learner'", [req.params.id]);
     if (!rowCount) return res.status(404).json({ success: false, error: 'Learner not found.' });
     // Also clean up their progress
     await Promise.all([
@@ -459,13 +466,13 @@ app.post('/api/auth/login', async (req, res) => {
   const identifier = (email || '').toLowerCase().trim();
   try {
     const { rows } = await pool.query(
-      'SELECT * FROM users WHERE (email = $1 OR username = $1) AND password = $2',
+      'SELECT * FROM learners WHERE (email = $1 OR username = $1) AND password = $2',
       [identifier, password]
     );
     if (!rows.length) return res.status(401).json({ success: false, error: 'Invalid credentials' });
     const user = rows[0];
     await pool.query(
-      "UPDATE users SET last_login = NOW(), status = CASE WHEN status = 'invited' THEN 'active' ELSE status END WHERE id = $1",
+      "UPDATE learners SET last_login = NOW(), status = CASE WHEN status = 'invited' THEN 'active' ELSE status END WHERE id = $1",
       [user.id]
     );
     res.json({ success: true, data: safeUser({ ...user, status: user.status === 'invited' ? 'active' : user.status }) });
@@ -478,7 +485,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ success: false, error: 'Email is required.' });
   try {
-    const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email.toLowerCase().trim()]);
+    const { rows } = await pool.query('SELECT * FROM learners WHERE email = $1', [email.toLowerCase().trim()]);
     if (!rows.length) return res.json({ success: true });
     const token     = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
@@ -500,7 +507,7 @@ app.post('/api/auth/reset-password', async (req, res) => {
       await pool.query('DELETE FROM reset_tokens WHERE token = $1', [token]);
       return res.status(400).json({ success: false, error: 'This reset link has expired. Please request a new one.' });
     }
-    await pool.query('UPDATE users SET password = $1 WHERE id = $2', [password, rows[0].user_id]);
+    await pool.query('UPDATE learners SET password = $1 WHERE id = $2', [password, rows[0].user_id]);
     await pool.query('DELETE FROM reset_tokens WHERE token = $1', [token]);
     res.json({ success: true });
   } catch (err) {
