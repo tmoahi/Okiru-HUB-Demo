@@ -19,40 +19,23 @@ const pool = new Pool({
 });
 
 async function initDB() {
-  // Add columns to the existing learners table
-  const cols = [
-    `ADD COLUMN IF NOT EXISTS name             TEXT`,
-    `ADD COLUMN IF NOT EXISTS email            TEXT`,
-    `ADD COLUMN IF NOT EXISTS username         TEXT`,
-    `ADD COLUMN IF NOT EXISTS company          TEXT DEFAULT ''`,
-    `ADD COLUMN IF NOT EXISTS role             TEXT DEFAULT 'learner'`,
-    `ADD COLUMN IF NOT EXISTS avatar           TEXT DEFAULT ''`,
-    `ADD COLUMN IF NOT EXISTS password         TEXT`,
-    `ADD COLUMN IF NOT EXISTS status           TEXT DEFAULT 'invited'`,
-    `ADD COLUMN IF NOT EXISTS last_login       TIMESTAMPTZ`,
-    `ADD COLUMN IF NOT EXISTS last_seen        TIMESTAMPTZ`,
-    `ADD COLUMN IF NOT EXISTS total_time_secs  INTEGER DEFAULT 0`,
-    `ADD COLUMN IF NOT EXISTS invited_at       TIMESTAMPTZ DEFAULT NOW()`,
-  ];
-  for (const col of cols) {
-    await pool.query(`ALTER TABLE learners ${col}`).catch(() => {});
-  }
-
-  // Ensure id is NOT NULL (required for PRIMARY KEY)
-  await pool.query(`ALTER TABLE learners ALTER COLUMN id SET NOT NULL`).catch(() => {});
-
-  // Make id the primary key if not already
   await pool.query(`
-    DO $$ BEGIN
-      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'learners_pkey') THEN
-        ALTER TABLE learners ADD PRIMARY KEY (id);
-      END IF;
-    END $$;
-  `).catch(() => {});
-
-  // Unique constraints on email and username
-  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS learners_email_key    ON learners (email)`).catch(() => {});
-  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS learners_username_key ON learners (username)`).catch(() => {});
+    CREATE TABLE IF NOT EXISTS learners (
+      id               TEXT PRIMARY KEY,
+      name             TEXT NOT NULL,
+      email            TEXT UNIQUE NOT NULL,
+      username         TEXT UNIQUE NOT NULL,
+      company          TEXT DEFAULT '',
+      role             TEXT NOT NULL DEFAULT 'learner',
+      avatar           TEXT DEFAULT '',
+      password         TEXT NOT NULL,
+      status           TEXT DEFAULT 'invited',
+      last_login       TIMESTAMPTZ,
+      last_seen        TIMESTAMPTZ,
+      total_time_secs  INTEGER DEFAULT 0,
+      invited_at       TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
 
   // Other tables
   await pool.query(`
