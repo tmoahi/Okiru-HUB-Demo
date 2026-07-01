@@ -38,6 +38,9 @@ async function initDB() {
     await pool.query(`ALTER TABLE learners ${col}`).catch(() => {});
   }
 
+  // Ensure id is NOT NULL (required for PRIMARY KEY)
+  await pool.query(`ALTER TABLE learners ALTER COLUMN id SET NOT NULL`).catch(() => {});
+
   // Make id the primary key if not already
   await pool.query(`
     DO $$ BEGIN
@@ -46,6 +49,10 @@ async function initDB() {
       END IF;
     END $$;
   `).catch(() => {});
+
+  // Unique constraints on email and username
+  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS learners_email_key    ON learners (email)`).catch(() => {});
+  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS learners_username_key ON learners (username)`).catch(() => {});
 
   // Other tables
   await pool.query(`
@@ -417,11 +424,13 @@ app.post('/api/admin/invite', async (req, res) => {
     const id       = `learner_${Date.now()}`;
     const avatar   = name.trim().split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
+    console.log('[invite] inserting learner', id, email.trim().toLowerCase());
     await pool.query(
       `INSERT INTO learners (id, name, email, username, company, role, avatar, password, status, invited_at)
        VALUES ($1,$2,$3,$4,$5,'learner',$6,$7,'invited',NOW())`,
       [id, name.trim(), email.trim().toLowerCase(), username, company || '', avatar, password]
     );
+    console.log('[invite] insert OK');
 
     const emailResult = await sendEmail({
       to: email.trim().toLowerCase(),
